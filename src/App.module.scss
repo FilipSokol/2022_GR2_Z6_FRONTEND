@@ -1,0 +1,13 @@
+@import "../src/styles/variables";
+
+.app {
+  background-color: white;
+
+  .container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    font-family: $body-font;
+  }
+}
