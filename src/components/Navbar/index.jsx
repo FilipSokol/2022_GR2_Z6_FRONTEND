@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./Navbar.module.scss";
 import authService from "../../services/auth.service";
-
-import logo from "../../assets/logo.svg";
+import Logo from "../../assets/logo";
 
 const Navbar = ({ toggle }) => {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -39,64 +38,46 @@ const Navbar = ({ toggle }) => {
 
   return (
     <div className={styles.container}>
-      <nav className={styles.contents} role="navigation">
+      <nav className={styles.content} role="navigation">
         <div className={styles.logoContainer}>
-          <img
-            src={undefined}
-            alt={logo}
+          <div
             className={styles.logoImage}
             onClick={() => {
               navigate("/");
             }}
-          />
+          >
+            <Logo />
+          </div>
         </div>
-
-        {/* <div className="px-4 cursor-pointer nvbar:hidden" onClick={toggle}>
-          <FontAwesomeIcon icon={faBars} className="w-8 h-8 text-lightblack" />
-        </div> */}
-        <div className="pr-8 nvbar:block hidden">
-          <Link to="/" className="p-4 text-lightblack hover:text-lightblack">
+        <div className={styles.navButtons}>
+          <Link to="/" className={styles.navButton}>
             Strona Główna
           </Link>
-          <Link
-            to="/scoreboard"
-            className="p-4 text-lightblack hover:text-lightblack"
-          >
-            Ranking
+
+          <Link to="/student" className={styles.navButton}>
+            Panel Studenta
+          </Link>
+          <Link to="/nauczyciel" className={styles.navButton}>
+            Panel Nauczyciela
           </Link>
 
-          {currentUser ? (
-            <>
-              {authorized && (
-                <Link
-                  to="/admin"
-                  className="p-4 text-lightblack hover:text-lightblack"
-                >
-                  Panel Admina
-                </Link>
-              )}
-              <Link
-                to="/posty"
-                className="p-4 text-lightblack hover:text-lightblack"
-              >
-                Moje Posty
-              </Link>
-              <Link
-                onClick={logOut}
-                to="/"
-                className="px-3 py-2 ml-2 bg-lightgreen rounded-full text-lightblack hover:text-lightblack"
-              >
-                Wyloguj
-              </Link>
-            </>
+          <Link onClick={logOut} to="/" className={styles.navButton}>
+            Wyloguj
+          </Link>
+
+          <Link to="/login" className={styles.navButton}>
+            Logowanie
+          </Link>
+
+          {/* {currentUser ? (
+            <Link onClick={logOut} to="/" className={styles.navButton}>
+              Wyloguj
+            </Link>
           ) : (
-            <Link
-              to="/login"
-              className="px-3 py-2 ml-2 bg-lightgreen rounded-full text-lightblack hover:text-lightblack"
-            >
+            <Link to="/login" className={styles.navButton}>
               Logowanie
             </Link>
-          )}
+          )} */}
         </div>
       </nav>
     </div>
