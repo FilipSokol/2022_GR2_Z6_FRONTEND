@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.scss";
 
 export default function Login() {
@@ -6,9 +7,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState(null);
 
+  const navigate = useNavigate();
+
   const Login = (e) => {
     e.preventDefault();
     console.log(e);
+    navigate("/");
   };
 
   return (
