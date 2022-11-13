@@ -9,6 +9,32 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  const createToken = (role) => {
+    switch (role) {
+      case "student":
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({ username: "Student", role: "student" })
+        );
+        navigate("/");
+        break;
+      case "teacher":
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({ username: "Teacher", role: "teacher" })
+        );
+        navigate("/");
+        break;
+      case "admin":
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({ username: "Admin", role: "admin" })
+        );
+        navigate("/");
+        break;
+    }
+  };
+
   const Login = (e) => {
     e.preventDefault();
     console.log(e);
@@ -36,6 +62,33 @@ export default function Login() {
         </button>
       </form>
       <p className={styles.loginMessage}>{loginStatus}</p>
+
+      <div className={styles.testContainer}>
+        <button
+          type="button"
+          onClick={() => {
+            createToken("student");
+          }}
+        >
+          Student
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            createToken("teacher");
+          }}
+        >
+          Nauczyciel
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            createToken("admin");
+          }}
+        >
+          Admin
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,48 @@
+@import "../../styles/variables";
+
+li {
+  margin: 17px 46px;
+  display: flex;
+  svg {
+    width: 30px;
+    margin-right: 15px;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: $black;
+  font-weight: 500;
+  position: relative;
+}
+
+.background {
+  border-right: 5px solid $blue;
+  margin: 0;
+  width: calc(100% - 21px);
+  padding: 0px;
+  height: 100%;
+  position: relative;
+  bottom: 17px;
+}
+
+@media (max-width: $xl) {
+  li {
+    .text {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: $lg) {
+  li {
+    .text {
+      display: block;
+    }
+  }
+
+  .background {
+    border-right: 20px solid $blue;
+    width: calc(100% - 46px);
+  }
+}

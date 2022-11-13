@@ -12,8 +12,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^5.11.3",
+    "@fullcalendar/react": "^5.11.2",
+    "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-responsive": "^9.0.0",
     "react-router-dom": "^6.4.2",
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1"
