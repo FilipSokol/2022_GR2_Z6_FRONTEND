@@ -1,8 +1,8 @@
 export default (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="45"
-    height="50"
+    width="70"
+    height="55"
     version="1.2"
     viewBox="0 0 498 352"
   >

@@ -43,13 +43,13 @@
       border-radius: 4px;
       cursor: pointer;
       color: $white;
-      background-color: $green;
+      background-color: #00b8e9;
       font-weight: 600;
       transition: background-color 0.45s;
     }
 
     button:hover {
-      background-color: $light-green;
+      background-color: #1fa4c9;
       transition: background-color 0.45s;
     }
   }
@@ -74,12 +74,12 @@
       border-radius: 4px;
       cursor: pointer;
       color: $white;
-      background-color: $green;
+      background-color: #00b8e9;
       font-weight: 600;
     }
 
     button:hover {
-      background-color: $light-green;
+      background-color: #1fa4c9;
       transition: background-color 0.45s;
     }
   }

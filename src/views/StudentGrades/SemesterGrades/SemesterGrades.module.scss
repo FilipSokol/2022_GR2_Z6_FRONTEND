@@ -1,6 +1,10 @@
-@import "../../styles/variables.scss";
+@import "../../../styles/variables.scss";
 
-.container {
-  height: 100vh;
+.outletContent {
   width: 100%;
+  padding-top: 18px;
+
+  .table {
+    border-top: 1px solid $gray;
+  }
 }

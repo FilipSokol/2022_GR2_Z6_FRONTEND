@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import authService from "../services/auth.service";
 import TimeTable from "./Timetable";
 import StudentGrades from "./StudentGrades";
+import SemesterGrades from "./StudentGrades/SemesterGrades";
+import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
 
 export default function Layout() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -29,7 +31,12 @@ export default function Layout() {
       <Routes>
         <Route element={<PrivateRoutes token={currentUser} />}>
           <Route path="/" element={<Home />} />
-          <Route path="/oceny" element={<StudentGrades />} />
+          <Route path="/oceny" element={<StudentGrades />}>
+            <Route index element={<SemesterGrades />} />
+            <Route path="semestr" element={<SemesterGrades />} />
+            <Route path="ogolne" element={<AllSemesterGrades />} />
+          </Route>
+
           <Route path="/plan" element={<TimeTable />} />
           <Route path="*" element={<Error />} />
         </Route>

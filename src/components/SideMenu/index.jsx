@@ -9,6 +9,7 @@ import styles from "./SideMenu.module.scss";
 import authService from "../../services/auth.service";
 import calendar from "../../assets/calendar";
 import student from "../../assets/student";
+import mediumLogo from "../../assets/mediumLogo";
 
 export default function SideMenu() {
   // const [currentUser, setCurrentUser] = useState(null);
@@ -31,7 +32,11 @@ export default function SideMenu() {
           <div className={styles.content}>
             <div className={styles.logo}>
               <Link to="/">
-                <SvgIcon icon={smallLogo} />
+                {useResponsive().isSmallDesktop ? (
+                  <SvgIcon icon={smallLogo} />
+                ) : (
+                  <SvgIcon icon={mediumLogo} />
+                )}
               </Link>
             </div>
 
@@ -53,6 +58,7 @@ export default function SideMenu() {
                 icon={logOut}
                 linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
                 mobile={false}
+                link={"/login"}
               />
             </div>
           </div>
