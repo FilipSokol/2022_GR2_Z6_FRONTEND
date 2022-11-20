@@ -3,43 +3,48 @@ import PrivateRoutes from "../utils/PrivateRoutes";
 import Home from "./Home";
 import Login from "./Login";
 import Error from "./Error";
-import { useState, useEffect } from "react";
+import TimeTable from "./TimeTable";
 import authService from "../services/auth.service";
-import TimeTable from "./Timetable";
 import StudentGrades from "./StudentGrades";
 import SemesterGrades from "./StudentGrades/SemesterGrades";
 import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
 
 export default function Layout() {
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const useAuthRoutes = () => {
+    const token = authService.getCurrentUser();
+    const user = authService.parseJwt(token);
+    const role =
+      user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-  const AuthVerify = () => {
-    const user = authService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
+    switch (role) {
+      case "User":
+        return (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/oceny" element={<StudentGrades />}>
+              <Route index element={<SemesterGrades />} />
+              <Route path="semestr" element={<SemesterGrades />} />
+              <Route path="ogolne" element={<AllSemesterGrades />} />
+            </Route>
+            <Route path="/plan" element={<TimeTable />} />
+            <Route path="*" element={<Error />} />
+          </>
+        );
+      case "Manager":
+        console.log("Manager");
+        break;
+      case "Admin":
+        console.log("Admin");
+        break;
+      default:
+        return <Route path="*" element={<Error />} />;
     }
   };
-
-  useEffect(() => {
-    AuthVerify();
-  }, [location.pathname]);
-
-  //TODO Fix: relaod after login and then check auth. Async problem with loading data first and setting corect state
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<PrivateRoutes token={currentUser} />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/oceny" element={<StudentGrades />}>
-            <Route index element={<SemesterGrades />} />
-            <Route path="semestr" element={<SemesterGrades />} />
-            <Route path="ogolne" element={<AllSemesterGrades />} />
-          </Route>
-
-          <Route path="/plan" element={<TimeTable />} />
-          <Route path="*" element={<Error />} />
-        </Route>
+        <Route element={<PrivateRoutes />}>{useAuthRoutes()}</Route>
         <Route element={<Login />} path="/login" />
       </Routes>
     </BrowserRouter>

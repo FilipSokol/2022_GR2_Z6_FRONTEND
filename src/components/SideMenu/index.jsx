@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import smallLogo from "../../assets/smallLogo";
 import logOut from "../../assets/logOut";
@@ -6,25 +5,11 @@ import { useResponsive } from "../../utils/responsive";
 import LinkMenu from "../LinkMenu";
 import SvgIcon from "../SvgIcon";
 import styles from "./SideMenu.module.scss";
-import authService from "../../services/auth.service";
 import calendar from "../../assets/calendar";
 import student from "../../assets/student";
 import mediumLogo from "../../assets/mediumLogo";
 
 export default function SideMenu() {
-  // const [currentUser, setCurrentUser] = useState(null);
-
-  // const AuthVerify = () => {
-  //   const user = authService.getCurrentUser();
-  //   if (user) {
-  //     setCurrentUser(user);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   AuthVerify();
-  // }, [location.pathname]);
-
   return (
     <div>
       {useResponsive().isDesktop && (
@@ -53,12 +38,12 @@ export default function SideMenu() {
                 linkText={useResponsive().isSmallDesktop ? "" : "Plan zajęć"}
                 mobile={false}
               />
-              {/* //TODO logout, change LinkMenu component structure */}
               <LinkMenu
                 icon={logOut}
                 linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
                 mobile={false}
                 link={"/login"}
+                logOut={true}
               />
             </div>
           </div>

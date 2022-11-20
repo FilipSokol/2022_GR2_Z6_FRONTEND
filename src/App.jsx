@@ -1,5 +1,8 @@
+import axios from "axios";
 import styles from "./App.module.scss";
-import Layout from './views/Layout'
+import Layout from "./views/Layout";
+
+axios.defaults.withCredentials = true;
 
 function App() {
   return (
