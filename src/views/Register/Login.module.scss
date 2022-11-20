@@ -54,21 +54,6 @@
       background-color: #1fa4c9;
       transition: background-color 0.45s;
     }
-
-    .bottomMessage {
-      padding-top: 14px;
-
-      .bottomLink {
-        margin-left: 5px;
-        color: $icon-blue;
-      }
-
-      .bottomLink:hover {
-        color: white;
-        background-color: $light-blue;
-        transition: background-color 0.5s ease;
-      }
-    }
   }
 
   .loginMessage {

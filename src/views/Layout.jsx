@@ -8,6 +8,7 @@ import authService from "../services/auth.service";
 import StudentGrades from "./StudentGrades";
 import SemesterGrades from "./StudentGrades/SemesterGrades";
 import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
+import Register from "./Register";
 
 export default function Layout() {
   const useAuthRoutes = () => {
@@ -46,6 +47,7 @@ export default function Layout() {
       <Routes>
         <Route element={<PrivateRoutes />}>{useAuthRoutes()}</Route>
         <Route element={<Login />} path="/login" />
+        <Route element={<Register />} path="/rejestracja" />
       </Routes>
     </BrowserRouter>
   );

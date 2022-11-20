@@ -73,6 +73,18 @@ export default function Login() {
         <button type="submit" className={styles.loginButton}>
           Zaloguj
         </button>
+        <p className={styles.bottomMessage}>
+          Nie posiadasz jeszcze konta?
+          <a
+            className={styles.bottomLink}
+            onClick={() => {
+              navigate("/rejestracja");
+            }}
+          >
+            Zarejestruj
+          </a>
+          .
+        </p>
       </form>
       <p className={styles.loginMessage}>{loginStatus}</p>
     </div>
