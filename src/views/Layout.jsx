@@ -9,6 +9,7 @@ import StudentGrades from "./StudentGrades";
 import SemesterGrades from "./StudentGrades/SemesterGrades";
 import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
 import Register from "./Register";
+import AdminPanel from "./Admin";
 
 export default function Layout() {
   const useAuthRoutes = () => {
@@ -35,8 +36,13 @@ export default function Layout() {
         console.log("Manager");
         break;
       case "Admin":
-        console.log("Admin");
-        break;
+        return (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="*" element={<Error />} />
+          </>
+        );
       default:
         return <Route path="*" element={<Error />} />;
     }
