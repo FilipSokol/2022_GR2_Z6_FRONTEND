@@ -9,8 +9,7 @@
   align-items: center;
 
   .formBox {
-    padding: 0 40px 0 40px;
-    height: 390px;
+    padding: 20px 40px 20px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -26,12 +25,17 @@
       font-weight: 500;
     }
 
+    .inputLabel {
+      height: 25px;
+      font-size: 13px;
+      color: $rose;
+    }
+
     input {
       height: 46px;
       width: 268px;
       box-sizing: border-box;
       padding-left: 15px;
-      margin-bottom: 2rem;
       font-size: 18px;
       border: 1px solid $grey;
       border-radius: 4px;
@@ -40,6 +44,7 @@
     button {
       height: 46px;
       width: 268px;
+      margin-top: 5px;
       font-size: 18px;
       border: 0;
       border-radius: 4px;
@@ -53,6 +58,21 @@
     button:hover {
       background-color: #1fa4c9;
       transition: background-color 0.45s;
+    }
+
+    .bottomMessage {
+      padding-top: 14px;
+
+      .bottomLink {
+        margin-left: 5px;
+        color: $icon-blue;
+      }
+
+      .bottomLink:hover {
+        color: white;
+        background-color: $light-blue;
+        transition: background-color 0.5s ease;
+      }
     }
   }
 
@@ -60,30 +80,5 @@
     margin-top: 30px;
     height: 5px;
     color: $rose;
-  }
-
-  .testContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    width: 100%;
-
-    button {
-      padding: 8px 15px 8px 15px;
-      font-size: 18px;
-      border: 0;
-      border-radius: 4px;
-      cursor: pointer;
-      color: $white;
-      background-color: #00b8e9;
-      font-weight: 600;
-    }
-
-    button:hover {
-      background-color: #1fa4c9;
-      transition: background-color 0.45s;
-    }
   }
 }

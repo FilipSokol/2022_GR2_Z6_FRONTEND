@@ -25,7 +25,7 @@ export default function Login() {
     isLoggenIn && navigate("/");
   }, []);
 
-  const Login = (e) => {
+  const login = (e) => {
     e.preventDefault();
 
     axios
@@ -34,13 +34,10 @@ export default function Login() {
         password: password,
       })
       .then((response) => {
-        console.log(response.data.token);
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data.token));
           navigate("/");
-          notification.success({
-            message: "Pomyślnie zalogowano.",
-          });
+          window.location.reload();
         } else {
           notification.error({
             message: "Błąd logowania.",
@@ -56,7 +53,7 @@ export default function Login() {
 
   return isLoggenIn ? null : (
     <div className={styles.container}>
-      <form onSubmit={Login} className={styles.formBox}>
+      <form onSubmit={login} className={styles.formBox}>
         <div className={styles.formTitle}>Logowanie</div>
         <input
           type="text"
