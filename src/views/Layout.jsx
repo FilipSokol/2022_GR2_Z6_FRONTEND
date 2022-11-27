@@ -38,7 +38,7 @@ export default function Layout() {
       case "Admin":
         return (
           <>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<AdminPanel />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={<Error />} />
           </>

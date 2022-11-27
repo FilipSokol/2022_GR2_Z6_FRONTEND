@@ -1,8 +1,10 @@
 @import "../../styles/variables.scss";
 
 .container {
-  height: 100vh;
+  padding-top: 20px;
+  min-height: 100vh;
   width: 100%;
+  gap: 20px;
   display: felx;
   flex-direction: column;
 }
