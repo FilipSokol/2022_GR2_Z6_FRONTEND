@@ -6,11 +6,16 @@ import axios from "axios";
 
 export default function DeparmentsAdmin() {
   const [data, setData] = useState();
+  const [editedDepartmentId, setEditedDepartmentId] = useState();
+  const [editedDepartmentData, setEditedDepartmentData] = useState();
   const [groupData, setGroupData] = useState();
   const [groupModalOpen, setGroupModalOpen] = useState(false);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
   const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false);
+  const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false);
 
   const [form] = Form.useForm();
+  const [formEdit] = Form.useForm();
 
   useEffect(() => {
     getDepartmentsData();
@@ -38,12 +43,76 @@ export default function DeparmentsAdmin() {
       });
   }
 
+  async function createDepartment(name, address, city, postalCode) {
+    await axios
+      .post("http://localhost:5000/api/departments", {
+        name: name,
+        address: address,
+        city: city,
+        postalCode: postalCode,
+      })
+      .then((response) => {
+        if (response.status) {
+          getDepartmentsData();
+          handleCancel();
+          notification.success({
+            message: "Pomyślnie dodano wydział.",
+          });
+        } else {
+          notification.error({
+            message: "Błąd dodawania wydziału.",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          message: "Błąd dodawania wydziału.",
+        });
+      });
+  }
+
+  async function editDepartment(departmentId, name, address, city, postalCode) {
+    console.log(departmentId, name, address, city, postalCode);
+
+    await axios
+      .put(`http://localhost:5000/api/departments/${departmentId}`, {
+        name: name,
+        address: address,
+        city: city,
+        postalCode: postalCode,
+      })
+      .then((response) => {
+        if (response.status) {
+          setEditedDepartmentData(null);
+          getDepartmentsData();
+          handleCancel();
+          notification.success({
+            message: "Pomyślnie edytowano wydział.",
+          });
+        } else {
+          setEditedDepartmentData(null);
+          notification.error({
+            message: "Błąd edytowania wydziału.",
+          });
+        }
+      })
+      .catch((error) => {
+        setEditedDepartmentData(null);
+        console.log(error);
+        notification.error({
+          message: "Błąd edytowania wydziału.",
+        });
+      });
+  }
+
   async function deleteDepartment(departmentId) {
     await axios
       .delete(`http://localhost:5000/api/departments/${departmentId}`)
       .then((response) => {
         if (response.status) {
-          getDepartmentsGroupData(departmentId);
+          getDepartmentsData();
+          setWarningModalOpen(false);
           notification.success({
             message: "Pomyślnie usunięto wydział.",
           });
@@ -56,7 +125,7 @@ export default function DeparmentsAdmin() {
       .catch((error) => {
         console.log(error);
         notification.error({
-          message: "Błąd usuwania grupy.",
+          message: "Błąd usuwania wydziału.",
         });
       });
   }
@@ -85,14 +154,51 @@ export default function DeparmentsAdmin() {
       });
   }
 
-  function handleNewDepartment(e) {
-    // e.preventDefault();
+  function handleNewDepartment(values) {
+    if (
+      (values.name === undefined && "") ||
+      (values.address === undefined && "") ||
+      (values.city === undefined && "") ||
+      (values.postalCode === undefined && "")
+    ) {
+      notification.error({
+        message: "Proszę wypełnić wszystkie pola.",
+      });
+    } else {
+      createDepartment(
+        values.name,
+        values.address,
+        values.city,
+        values.postalCode
+      );
+    }
+  }
 
-    console.log(e);
+  function handleEditDepartment(values) {
+    if (
+      (values.name === undefined && "") ||
+      (values.address === undefined && "") ||
+      (values.city === undefined && "") ||
+      (values.postalCode === undefined && "")
+    ) {
+      notification.error({
+        message: "Proszę wypełnić wszystkie pola.",
+      });
+    } else {
+      editDepartment(
+        editedDepartmentData.departmentId,
+        values.name,
+        values.address,
+        values.city,
+        values.postalCode
+      );
+    }
   }
 
   function handleCancel() {
+    setEditedDepartmentData(null);
     form.resetFields();
+    setEditDepartmentModalOpen(false);
     setAddDepartmentModalOpen(false);
   }
 
@@ -135,7 +241,12 @@ export default function DeparmentsAdmin() {
               key="address"
               width="16.6%"
             />
-            <Column title="Miasto" dataIndex="city" key="city" width="16.6%" />
+            <Column
+              title="Kod Pocztowy"
+              dataIndex="postalCode"
+              key="postalCode"
+              width="16.6%"
+            />
             <Column
               dataIndex="departmentId"
               key="departmentId"
@@ -153,14 +264,12 @@ export default function DeparmentsAdmin() {
               )}
             />
             <Column
-              dataIndex="departmentId"
-              key="departmentId"
               width="8%"
-              render={(departmentId) => (
+              render={(data) => (
                 <button
                   onClick={() => {
-                    deleteDepartment(departmentId);
-                    getDepartmentsData();
+                    setEditedDepartmentData(data);
+                    setEditDepartmentModalOpen(true);
                   }}
                   className={styles.tableButton}
                 >
@@ -175,8 +284,8 @@ export default function DeparmentsAdmin() {
               render={(departmentId) => (
                 <button
                   onClick={() => {
-                    deleteDepartment(departmentId);
-                    getDepartmentsData();
+                    setEditedDepartmentId(departmentId);
+                    setWarningModalOpen(true);
                   }}
                   className={styles.tableButton}
                 >
@@ -187,6 +296,34 @@ export default function DeparmentsAdmin() {
           </Table>
         </div>
       </div>
+
+      <Modal
+        title={false}
+        closable={false}
+        cancelText="Anuluj"
+        okText="Tak"
+        okButtonProps={{
+          style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
+        }}
+        cancelButtonProps={{
+          style: { borderRadius: 0 },
+        }}
+        centered
+        visible={warningModalOpen}
+        onCancel={() => {
+          setEditedDepartmentId(null);
+          setWarningModalOpen(false);
+        }}
+        onOk={() => {
+          deleteDepartment(editedDepartmentId);
+        }}
+      >
+        <div className={styles.modalBox}>
+          <div className={styles.modalWarningText}>
+            Czy na pewno chcesz usunąć wydział?
+          </div>
+        </div>
+      </Modal>
       <Modal
         title="Grupy przypisane do wydziału"
         cancelText="Anuluj"
@@ -240,6 +377,12 @@ export default function DeparmentsAdmin() {
         cancelText="Anuluj"
         okText="Dodaj"
         centered
+        okButtonProps={{
+          style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
+        }}
+        cancelButtonProps={{
+          style: { borderRadius: 0 },
+        }}
         visible={addDepartmentModalOpen}
         onCancel={handleCancel}
         onOk={form.submit}
@@ -249,10 +392,88 @@ export default function DeparmentsAdmin() {
           onFinish={handleNewDepartment}
           className={styles.modalFormBox}
         >
-          <input type="text" name="name" placeholder="Nazwa" />
-          <input type="text" name="address" placeholder="Adres" />
-          <input type="text" name="city" placeholder="Miasto" />
-          <input type="text" name="postalCode" placeholder="Kod pocztowy" />
+          <Form.Item name="name" className={styles.modalFormInput}>
+            <input type="text" name="name" placeholder="Nazwa" />
+          </Form.Item>
+          <Form.Item name="address" className={styles.modalFormInput}>
+            <input type="text" name="address" placeholder="Adres" />
+          </Form.Item>
+          <Form.Item name="city" className={styles.modalFormInput}>
+            <input type="text" name="city" placeholder="Miasto" />
+          </Form.Item>
+          <Form.Item name="postalCode" className={styles.modalFormInput}>
+            <input type="text" name="postalCode" placeholder="Kod pocztowy" />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Edytuj wydział"
+        cancelText="Anuluj"
+        okText="Edytuj"
+        centered
+        okButtonProps={{
+          style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
+        }}
+        cancelButtonProps={{
+          style: { borderRadius: 0 },
+        }}
+        visible={editDepartmentModalOpen}
+        onCancel={handleCancel}
+        onOk={formEdit.submit}
+      >
+        <Form
+          form={formEdit}
+          onFinish={handleEditDepartment}
+          className={styles.modalFormBox}
+        >
+          <Form.Item
+            initialValue={editedDepartmentData?.name}
+            name="name"
+            className={styles.modalFormInput}
+          >
+            <input
+              type="text"
+              name="name"
+              defaultValue={editedDepartmentData?.name}
+              placeholder="Nazwa"
+            />
+          </Form.Item>
+          <Form.Item
+            initialValue={editedDepartmentData?.address}
+            name="address"
+            className={styles.modalFormInput}
+          >
+            <input
+              type="text"
+              name="address"
+              defaultValue={editedDepartmentData?.address}
+              placeholder="Adres"
+            />
+          </Form.Item>
+          <Form.Item
+            initialValue={editedDepartmentData?.city}
+            name="city"
+            className={styles.modalFormInput}
+          >
+            <input
+              type="text"
+              name="city"
+              defaultValue={editedDepartmentData?.city}
+              placeholder="Miasto"
+            />
+          </Form.Item>
+          <Form.Item
+            initialValue={editedDepartmentData?.postalCode}
+            name="postalCode"
+            className={styles.modalFormInput}
+          >
+            <input
+              type="text"
+              name="postalCode"
+              defaultValue={editedDepartmentData?.postalCode}
+              placeholder="Kod pocztowy"
+            />
+          </Form.Item>
         </Form>
       </Modal>
     </div>

@@ -17,7 +17,6 @@ export default function GroupsAdmin() {
     await axios
       .get("http://localhost:5000/api/departments")
       .then((response) => {
-        console.log(response);
         setDepartmentsData(response.data);
       })
       .catch((error) => {

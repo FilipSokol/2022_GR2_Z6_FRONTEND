@@ -55,19 +55,16 @@
         white-space: nowrap;
         text-align: center;
         border: 1;
-        color: black;
-        background-color: $white;
-        border: 1px solid $grey;
+        color: $white;
+        background-color: #00b8e9;
+        border: 1px;
         outline: none;
-        transition: color 1s;
-        transition: border 0.5s;
+        transition: background-color 0.5s ease;
       }
 
       .tableButton:hover {
-        color: #00b8e9;
-        border: 1px solid #00b8e9;
-        transition: color 1s;
-        transition: border 0.5s ease;
+        transition: background-color 0.5s ease;
+        background-color: #1fa4c9;
       }
     }
   }
@@ -95,36 +92,6 @@
     .tableButton:hover {
       transition: background-color 0.5s ease;
       background-color: #1fa4c9;
-    }
-  }
-
-  .modalWarningText {
-    height: 100%;
-    width: 100%;
-    padding-top: 10px;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-.modalFormBox {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  .modalFormInput {
-    width: 100%;
-
-    input {
-      width: 100%;
-      height: 46px;
-      box-sizing: border-box;
-      padding-left: 15px;
-      font-size: 18px;
-      border: 1px solid $grey;
-      border-radius: 4px;
     }
   }
 }
