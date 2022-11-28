@@ -20,6 +20,22 @@
         height: 54px;
         background-color: #fafafa;
 
+        .headerSelectBox {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          outline: none;
+
+          select {
+            padding: 7px 15px 7px 15px;
+            border: 1px solid $grey;
+            outline: none;
+          }
+          select:focus {
+            outline: none;
+          }
+        }
+
         .headerTitle {
           font-weight: 700;
           font-size: 20px;
@@ -28,7 +44,7 @@
         .headerButton {
           height: 100%;
           display: flex;
-          align-items: flex-end;
+          align-items: center;
 
           .tableHeaderButton {
             width: 150px;
@@ -55,16 +71,19 @@
         white-space: nowrap;
         text-align: center;
         border: 1;
-        color: $white;
-        background-color: #00b8e9;
-        border: 1px;
+        color: black;
+        background-color: $white;
+        border: 1px solid $grey;
         outline: none;
-        transition: background-color 0.5s ease;
+        transition: color 1s;
+        transition: border 0.5s;
       }
 
       .tableButton:hover {
-        transition: background-color 0.5s ease;
-        background-color: #1fa4c9;
+        color: #00b8e9;
+        border: 1px solid #00b8e9;
+        transition: color 1s;
+        transition: border 0.5s ease;
       }
     }
   }
@@ -92,6 +111,36 @@
     .tableButton:hover {
       transition: background-color 0.5s ease;
       background-color: #1fa4c9;
+    }
+  }
+
+  .modalWarningText {
+    height: 100%;
+    width: 100%;
+    padding-top: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.modalFormBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .modalFormInput {
+    width: 100%;
+
+    input {
+      width: 100%;
+      height: 46px;
+      box-sizing: border-box;
+      padding-left: 15px;
+      font-size: 18px;
+      border: 1px solid $grey;
+      border-radius: 4px;
     }
   }
 }

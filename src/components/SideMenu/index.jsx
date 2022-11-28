@@ -52,7 +52,7 @@ export default function SideMenu() {
           <div className={styles.part}>
             <LinkMenu
               icon={tool}
-              link={"/admin"}
+              link={"/"}
               linkText={useResponsive().isSmallDesktop ? "" : "Panel admina"}
               mobile={false}
             />

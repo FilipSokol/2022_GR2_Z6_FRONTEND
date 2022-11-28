@@ -225,6 +225,7 @@ export default function DeparmentsAdmin() {
             pagination={{
               className: styles.pagination,
               defaultPageSize: 10,
+              size: "small",
             }}
             locale={{
               emptyText: "Brak Danych",
