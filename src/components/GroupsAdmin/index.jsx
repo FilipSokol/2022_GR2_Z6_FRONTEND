@@ -8,10 +8,11 @@ export default function GroupsAdmin() {
   const [data, setData] = useState();
   const [departmentsData, setDepartmentsData] = useState();
   const [departmentId, setDepartmentId] = useState(1);
+  const [editedGroupData, setEditedGroupData] = useState();
+
   const [addGroupModalOpen, setAddGroupModalOpen] = useState(false);
 
   const [editedDepartmentId, setEditedDepartmentId] = useState();
-  const [editedDepartmentData, setEditedDepartmentData] = useState();
   const [groupData, setGroupData] = useState();
   const [groupModalOpen, setGroupModalOpen] = useState(false);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
@@ -24,8 +25,6 @@ export default function GroupsAdmin() {
     getDepartmentsData();
     getGroupsData();
   }, []);
-
-  console.log(data);
 
   async function getGroupsData(departmentId) {
     await axios
@@ -72,6 +71,39 @@ export default function GroupsAdmin() {
       });
   }
 
+  async function editGroup(name, departmentId) {
+    await axios
+      .put(
+        `http://localhost:5000/api/departments/${departmentId}/groups/${editedGroupData.groupId}`,
+        {
+          name: name,
+          departmentId: departmentId,
+        }
+      )
+      .then((response) => {
+        if (response.status) {
+          setEditedGroupData(null);
+          getGroupsData(setEditedGroupData.groupId);
+          handleCancel();
+          notification.success({
+            message: "Pomyślnie edytowano grupę.",
+          });
+        } else {
+          setEditedGroupData(null);
+          notification.error({
+            message: "Błąd edytowania grupy.",
+          });
+        }
+      })
+      .catch((error) => {
+        setEditedGroupData(null);
+        console.log(error);
+        notification.error({
+          message: "Błąd edytowania grupy.",
+        });
+      });
+  }
+
   async function getDeleteGroup(departmentId, groupId) {
     await axios
       .delete(
@@ -113,12 +145,12 @@ export default function GroupsAdmin() {
   }
 
   function handleNewGroup(values) {
-    console.log(values);
     if (values.name === undefined) {
       notification.error({
         message: "Proszę wypełnić wszystkie pola.",
       });
     } else {
+      setAddGroupModalOpen(false);
       addNewGroup(values.name);
     }
   }
@@ -126,26 +158,18 @@ export default function GroupsAdmin() {
   function handleEditDepartment(values) {
     if (
       (values.name === undefined && "") ||
-      (values.address === undefined && "") ||
-      (values.city === undefined && "") ||
-      (values.postalCode === undefined && "")
+      (values.departmentId === undefined && "")
     ) {
       notification.error({
         message: "Proszę wypełnić wszystkie pola.",
       });
     } else {
-      editDepartment(
-        editedDepartmentData.departmentId,
-        values.name,
-        values.address,
-        values.city,
-        values.postalCode
-      );
+      editGroup(values.name, values.departmentId);
     }
   }
 
   function handleCancel() {
-    setEditedDepartmentData(null);
+    setEditedGroupData(null);
     form.resetFields();
     setEditDepartmentModalOpen(false);
     setAddGroupModalOpen(false);
@@ -233,7 +257,7 @@ export default function GroupsAdmin() {
               render={(data) => (
                 <button
                   onClick={() => {
-                    setEditedDepartmentData(data);
+                    setEditedGroupData(data);
                     setEditDepartmentModalOpen(true);
                   }}
                   className={styles.tableButton}
@@ -380,51 +404,27 @@ export default function GroupsAdmin() {
           className={styles.modalFormBox}
         >
           <Form.Item
-            initialValue={editedDepartmentData?.name}
+            initialValue={editedGroupData?.name}
             name="name"
             className={styles.modalFormInput}
           >
             <input
               type="text"
               name="name"
-              defaultValue={editedDepartmentData?.name}
+              defaultValue={editedGroupData?.name}
               placeholder="Nazwa"
             />
           </Form.Item>
           <Form.Item
-            initialValue={editedDepartmentData?.address}
-            name="address"
+            initialValue={editedGroupData?.departmentId}
+            name="departmentId"
             className={styles.modalFormInput}
           >
             <input
               type="text"
-              name="address"
-              defaultValue={editedDepartmentData?.address}
-              placeholder="Adres"
-            />
-          </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.city}
-            name="city"
-            className={styles.modalFormInput}
-          >
-            <input
-              type="text"
-              name="city"
-              defaultValue={editedDepartmentData?.city}
-              placeholder="Miasto"
-            />
-          </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.postalCode}
-            name="postalCode"
-            className={styles.modalFormInput}
-          >
-            <input
-              type="text"
-              name="postalCode"
-              defaultValue={editedDepartmentData?.postalCode}
-              placeholder="Kod pocztowy"
+              name="departmentId"
+              defaultValue={editedGroupData?.departmentId}
+              placeholder="ID Wydział"
             />
           </Form.Item>
         </Form>
