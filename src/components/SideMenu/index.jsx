@@ -20,7 +20,7 @@ export default function SideMenu() {
 
   const useAuthMenu = () => {
     switch (role) {
-      case "User":
+      case "Student":
         return (
           <div className={styles.part}>
             <LinkMenu
@@ -44,8 +44,8 @@ export default function SideMenu() {
             />
           </div>
         );
-      case "Manager":
-        console.log("Manager");
+      case "Teacher":
+        console.log("Teacher");
         break;
       case "Admin":
         return (

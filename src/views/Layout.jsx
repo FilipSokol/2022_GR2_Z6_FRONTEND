@@ -19,7 +19,7 @@ export default function Layout() {
       user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
     switch (role) {
-      case "User":
+      case "Student":
         return (
           <>
             <Route path="/" element={<Home />} />
@@ -28,11 +28,11 @@ export default function Layout() {
               <Route path="semestr" element={<SemesterGrades />} />
               <Route path="ogolne" element={<AllSemesterGrades />} />
             </Route>
-            <Route path="/plan" element={<TimeTable />} />
+            <Route path="/plan" element={<TimeTable userData={user} />} />
             <Route path="*" element={<Error />} />
           </>
         );
-      case "Manager":
+      case "Teacher":
         console.log("Manager");
         break;
       case "Admin":
