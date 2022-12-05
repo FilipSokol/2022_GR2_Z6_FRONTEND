@@ -34,6 +34,7 @@ export default function Login() {
         password: password,
       })
       .then((response) => {
+        console.log(response);
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data.token));
           navigate("/");
@@ -46,7 +47,7 @@ export default function Login() {
       })
       .catch((error) => {
         if (error) {
-          setLoginStatus("Nieprawidłowy email lub hasło.");
+          setLoginStatus("Nieprawidłowe dane lub konto nadal jest nieaktywne");
         }
       });
   };

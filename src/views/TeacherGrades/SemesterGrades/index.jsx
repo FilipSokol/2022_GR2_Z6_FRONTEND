@@ -4,6 +4,9 @@ import "antd/dist/antd.css";
 import Column from "antd/lib/table/Column";
 
 import styles from "./SemesterGrades.module.scss";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 const userGrades = [
   {
@@ -24,6 +27,24 @@ const userGrades = [
 ];
 
 export default function SemesterGrades() {
+  const [userSubject, setUserSubjects] = useState([]);
+
+  const getAllSubjects = () => {
+    axios.get(`http://localhost:5000/api/subjects`).then((response) => {
+      const topTierBackEnd = response.data.filter(
+        (ele, index) =>
+          index === response.data.findIndex((elem) => elem.name === ele.name)
+      );
+      setUserSubjects(topTierBackEnd);
+    });
+  };
+
+  useEffect(() => {
+    getAllSubjects();
+  }, []);
+
+  console.log(userSubject);
+
   return (
     <div className={styles.outletContent}>
       <div className={styles.table}>

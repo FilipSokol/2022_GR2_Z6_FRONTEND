@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-import styles from "./Timetable.module.scss";
+import styles from "./TeacherTimetable.module.scss";
 
 export default function TimeTable(userData) {
   const [data, setData] = useState([]);

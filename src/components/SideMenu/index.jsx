@@ -45,8 +45,29 @@ export default function SideMenu() {
           </div>
         );
       case "Teacher":
-        console.log("Teacher");
-        break;
+        return (
+          <div className={styles.part}>
+            <LinkMenu
+              icon={student}
+              link={"/oceny"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Oceny"}
+              mobile={false}
+            />
+            <LinkMenu
+              icon={calendar}
+              link={"/plan"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Plan zajęć"}
+              mobile={false}
+            />
+            <LinkMenu
+              icon={logOut}
+              linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
+              mobile={false}
+              link={"/login"}
+              logOut={true}
+            />
+          </div>
+        );
       case "Admin":
         return (
           <div className={styles.part}>

@@ -6,8 +6,8 @@ import Error from "./Error";
 import TimeTable from "./TimeTable";
 import authService from "../services/auth.service";
 import StudentGrades from "./StudentGrades";
-import SemesterGrades from "./StudentGrades/SemesterGrades";
-import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
+// import SemesterGrades from "./StudentGrades/SemesterGrades";
+// import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
 import Register from "./Register";
 import AdminPanel from "./Admin";
 
@@ -18,23 +18,31 @@ export default function Layout() {
     const role =
       user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
+    console.log(user);
     switch (role) {
       case "Student":
         return (
           <>
             <Route path="/" element={<Home />} />
-            <Route path="/oceny" element={<StudentGrades />}>
+            <Route path="/oceny" element={<StudentGrades userData={user} />} />
+            {/* <Route path="/oceny" element={<StudentGrades />}>
               <Route index element={<SemesterGrades />} />
               <Route path="semestr" element={<SemesterGrades />} />
               <Route path="ogolne" element={<AllSemesterGrades />} />
-            </Route>
+            </Route> */}
             <Route path="/plan" element={<TimeTable userData={user} />} />
             <Route path="*" element={<Error />} />
           </>
         );
       case "Teacher":
-        console.log("Manager");
-        break;
+        return (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/oceny" element={<StudentGrades userData={user} />} />
+            <Route path="/plan" element={<TimeTable userData={user} />} />
+            <Route path="*" element={<Error />} />
+          </>
+        );
       case "Admin":
         return (
           <>
