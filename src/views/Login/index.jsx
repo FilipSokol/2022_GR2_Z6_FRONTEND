@@ -41,13 +41,15 @@ export default function Login() {
           window.location.reload();
         } else {
           notification.error({
-            message: "Błąd logowania.",
+            message: "Login error.",
           });
         }
       })
       .catch((error) => {
         if (error) {
-          setLoginStatus("Nieprawidłowe dane lub konto nadal jest nieaktywne");
+          setLoginStatus(
+            "Incorrect data details or the account is still inactive"
+          );
         }
       });
   };
@@ -55,7 +57,7 @@ export default function Login() {
   return isLoggenIn ? null : (
     <div className={styles.container}>
       <form onSubmit={login} className={styles.formBox}>
-        <div className={styles.formTitle}>Logowanie</div>
+        <div className={styles.formTitle}>Login</div>
         <input
           type="text"
           name="email"
@@ -65,21 +67,21 @@ export default function Login() {
         <input
           type="password"
           name="password"
-          placeholder="Hasło"
+          placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className={styles.loginButton}>
-          Zaloguj
+          Log in
         </button>
         <p className={styles.bottomMessage}>
-          Nie posiadasz jeszcze konta?
+          Don't have an account yet?
           <a
             className={styles.bottomLink}
             onClick={() => {
               navigate("/rejestracja");
             }}
           >
-            Zarejestruj
+            Register
           </a>
           .
         </p>

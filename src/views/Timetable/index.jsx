@@ -63,9 +63,9 @@ export default function TimeTable(userData) {
         eventSettings={{ dataSource: data }}
       >
         <ViewsDirective>
-          <ViewDirective option="Day" displayName="Dzień" />
-          <ViewDirective option="Week" displayName="Tydzień" />
-          <ViewDirective option="Month" displayName="Miesiąc" />
+          <ViewDirective option="Day" />
+          <ViewDirective option="Week" />
+          <ViewDirective option="Month" />
         </ViewsDirective>
         <Inject services={[Day, Week, Month]} />
       </ScheduleComponent>

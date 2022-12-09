@@ -10,6 +10,7 @@ import StudentGrades from "./StudentGrades";
 // import AllSemesterGrades from "./StudentGrades/AllSemesterGrades";
 import Register from "./Register";
 import AdminPanel from "./Admin";
+import TeacherTimeTable from "./TeacherTimetable";
 
 export default function Layout() {
   const useAuthRoutes = () => {
@@ -18,7 +19,6 @@ export default function Layout() {
     const role =
       user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-    console.log(user);
     switch (role) {
       case "Student":
         return (
@@ -39,7 +39,10 @@ export default function Layout() {
           <>
             <Route path="/" element={<Home />} />
             <Route path="/oceny" element={<StudentGrades userData={user} />} />
-            <Route path="/plan" element={<TimeTable userData={user} />} />
+            <Route
+              path="/plan"
+              element={<TeacherTimeTable userData={user} />}
+            />
             <Route path="*" element={<Error />} />
           </>
         );

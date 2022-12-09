@@ -51,7 +51,7 @@ export default function Register() {
       setEmailMes("");
     } else {
       setEmailVal(false);
-      setEmailMes("Niepoprawna składnia e-maila");
+      setEmailMes("Invalid email syntax");
     }
 
     if (passwordRegex.test(passwordReg)) {
@@ -59,7 +59,7 @@ export default function Register() {
       setPasswordMes("");
     } else {
       setPasswordVal(false);
-      setPasswordMes("Niepoprawna składnia hasła");
+      setPasswordMes("Invalid password syntax");
     }
 
     if (passwordReg === secPasswordReg) {
@@ -67,7 +67,7 @@ export default function Register() {
       setSecPasswordMes("");
     } else {
       setSecPasswordVal(false);
-      setSecPasswordMes("Podane hasła nie zgadzają się");
+      setSecPasswordMes("The entered passwords do not match");
     }
 
     if (firstNameReg !== "") {
@@ -75,7 +75,7 @@ export default function Register() {
       setFirstNameMes("");
     } else {
       setFirstNameVal(false);
-      setFirstNameMes("Wpisz swoje imię");
+      setFirstNameMes("Enter your firstname");
     }
 
     if (lastNameReg !== "") {
@@ -83,7 +83,7 @@ export default function Register() {
       setLastNameMes("");
     } else {
       setLastNameVal(false);
-      setLastNameMes("Wpisz swoje nazwisko");
+      setLastNameMes("Enter your firstname");
     }
 
     if (birthdayReg !== "") {
@@ -91,7 +91,7 @@ export default function Register() {
       setBirthdayMes("");
     } else {
       setBirthdayVal(false);
-      setBirthdayMes("Wpisz swoją datę urodzenia");
+      setBirthdayMes("Enter your date of birth");
     }
 
     if (
@@ -124,10 +124,10 @@ export default function Register() {
         if (response.data === "") {
           navigate("/login");
           notification.success({
-            message: "Pomyślnie zarejestrowano.",
+            message: "Registered successfully.",
           });
         } else {
-          setRegisterStatus("Błąd rejestrowania.");
+          setRegisterStatus("Register error.");
         }
       });
     } else {
@@ -144,7 +144,7 @@ export default function Register() {
   return isLoggenIn ? null : (
     <div className={styles.container}>
       <form onSubmit={register} className={styles.formBox}>
-        <div className={styles.formTitle}>Rejestracja</div>
+        <div className={styles.formTitle}>Register</div>
 
         <input
           type="text"
@@ -160,7 +160,7 @@ export default function Register() {
         <input
           type="password"
           name="password"
-          placeholder="Hasło"
+          placeholder="Password"
           onChange={(e) => {
             setPasswordReg(e.target.value);
           }}
@@ -171,7 +171,7 @@ export default function Register() {
         <input
           type="password"
           name="password"
-          placeholder="Powtórz hasło"
+          placeholder="Repeat password"
           onChange={(e) => {
             setSecPasswordReg(e.target.value);
           }}
@@ -182,7 +182,7 @@ export default function Register() {
         <input
           type="text"
           name="firstname"
-          placeholder="Imię"
+          placeholder="Firstname"
           onChange={(e) => {
             setFirstNameReg(e.target.value);
           }}
@@ -193,7 +193,7 @@ export default function Register() {
         <input
           type="text"
           name="lastname"
-          placeholder="Nazwisko"
+          placeholder="Surname"
           onChange={(e) => {
             setLastNameReg(e.target.value);
           }}
@@ -204,7 +204,7 @@ export default function Register() {
         <input
           type="text"
           name="birthday"
-          placeholder="Data urodzenia"
+          placeholder="Date of birth"
           onFocus={(e) => (e.target.type = "date")}
           onBlur={(e) => (e.target.type = "text")}
           onChange={(e) => {
@@ -215,17 +215,17 @@ export default function Register() {
         <div className={styles.inputLabel}>{birthdayMes}</div>
 
         <button type="submit" className={styles.loginButton}>
-          Zarejestruj
+          Create account
         </button>
         <p className={styles.bottomMessage}>
-          Posiadasz już konto?
+          Already have an account?
           <a
             className={styles.bottomLink}
             onClick={() => {
               navigate("/login");
             }}
           >
-            Zaloguj
+            Log in
           </a>
           .
         </p>

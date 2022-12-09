@@ -12,30 +12,19 @@ import React, { useState, useEffect } from "react";
 
 import styles from "./TeacherTimetable.module.scss";
 
-export default function TimeTable(userData) {
+export default function TeacherTimeTable(userData) {
   const [data, setData] = useState([]);
+  const [teacherGroups, setTeacherGroups] = useState([]);
+  const [groupId, setGroupId] = useState();
 
-  async function getSchedule() {
+  async function getTeacherGroups() {
     await axios
-      .get(`http://localhost:5000/api/schedules/${userData.userData.GroupId}`)
+      .get(
+        `http://localhost:5000/api/teacher/${userData.userData.TeacherId}/groups`
+      )
       .then((response) => {
-        let id = 0;
-        let newArray = [];
-        response.data.forEach((element) => {
-          let obj = {
-            Id: id,
-            Subject: element.name,
-            StartTime: element.startTime,
-            EndTime: element.endTime,
-            IsAllDay: false,
-          };
-          id = id + 1;
-          newArray.push(obj);
-
-          if (response.data.length === newArray.length) {
-            setData(newArray);
-          }
-        });
+        setTeacherGroups(response.data);
+        setGroupId(response.data[0]);
       })
 
       .catch((error) => {
@@ -43,32 +32,81 @@ export default function TimeTable(userData) {
       });
   }
 
+  async function getSchedule() {
+    if (groupId) {
+      await axios
+        .get(`http://localhost:5000/api/schedules/${groupId}`)
+        .then((response) => {
+          let id = 0;
+          let newArray = [];
+          response.data.forEach((element) => {
+            let obj = {
+              Id: id,
+              Subject: element.name,
+              StartTime: element.startTime,
+              EndTime: element.endTime,
+              IsAllDay: false,
+            };
+            id = id + 1;
+            newArray.push(obj);
+
+            if (response.data.length === newArray.length) {
+              setData(newArray);
+            }
+          });
+        })
+
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  useEffect(() => {
+    getTeacherGroups();
+  }, []);
+
   useEffect(() => {
     getSchedule();
-  }, []);
+  }, [groupId]);
 
   return (
     <div className={styles.container}>
-      <ScheduleComponent
-        height="100vh"
-        currentView="Week"
-        startHour="06:00"
-        endHour="21:00"
-        readOnly={true}
-        showQuickInfo={false}
-        allowMultiDrag={false}
-        allowMultiCellSelection={false}
-        allowMultiRowSelection={false}
-        selectedDate={new Date()}
-        eventSettings={{ dataSource: data }}
-      >
-        <ViewsDirective>
-          <ViewDirective option="Day" displayName="Dzień" />
-          <ViewDirective option="Week" displayName="Tydzień" />
-          <ViewDirective option="Month" displayName="Miesiąc" />
-        </ViewsDirective>
-        <Inject services={[Day, Week, Month]} />
-      </ScheduleComponent>
+      <div className={styles.header}>
+        {teacherGroups.map((id) => {
+          return (
+            <button
+              onClick={() => setGroupId(id)}
+              className={
+                id === groupId ? styles.buttonActive : styles.buttonNotActive
+              }
+            >
+              Group {id}
+            </button>
+          );
+        })}
+      </div>
+      <div className={styles.timeTable}>
+        <ScheduleComponent
+          currentView="Week"
+          startHour="06:00"
+          endHour="21:00"
+          readOnly={true}
+          showQuickInfo={false}
+          allowMultiDrag={false}
+          allowMultiCellSelection={false}
+          allowMultiRowSelection={false}
+          selectedDate={new Date()}
+          eventSettings={{ dataSource: data }}
+        >
+          <ViewsDirective>
+            <ViewDirective option="Day" />
+            <ViewDirective option="Week" />
+            <ViewDirective option="Month" />
+          </ViewsDirective>
+          <Inject services={[Day, Week, Month]} />
+        </ScheduleComponent>
+      </div>
     </div>
   );
 }
