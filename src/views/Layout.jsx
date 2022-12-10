@@ -11,6 +11,7 @@ import StudentGrades from "./StudentGrades";
 import Register from "./Register";
 import AdminPanel from "./Admin";
 import TeacherTimeTable from "./TeacherTimetable";
+import TeacherStudentsGrades from "./TeacherGrades";
 
 export default function Layout() {
   const useAuthRoutes = () => {
@@ -38,7 +39,10 @@ export default function Layout() {
         return (
           <>
             <Route path="/" element={<Home />} />
-            <Route path="/oceny" element={<StudentGrades userData={user} />} />
+            <Route
+              path="/oceny"
+              element={<TeacherStudentsGrades userData={user} />}
+            />
             <Route
               path="/plan"
               element={<TeacherTimeTable userData={user} />}

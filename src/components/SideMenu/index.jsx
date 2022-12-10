@@ -26,18 +26,18 @@ export default function SideMenu() {
             <LinkMenu
               icon={student}
               link={"/oceny"}
-              linkText={useResponsive().isSmallDesktop ? "" : "Oceny"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Grades"}
               mobile={false}
             />
             <LinkMenu
               icon={calendar}
               link={"/plan"}
-              linkText={useResponsive().isSmallDesktop ? "" : "Plan zajęć"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Schedule"}
               mobile={false}
             />
             <LinkMenu
               icon={logOut}
-              linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Log out"}
               mobile={false}
               link={"/login"}
               logOut={true}
@@ -50,18 +50,18 @@ export default function SideMenu() {
             <LinkMenu
               icon={student}
               link={"/oceny"}
-              linkText={useResponsive().isSmallDesktop ? "" : "Oceny"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Grades"}
               mobile={false}
             />
             <LinkMenu
               icon={calendar}
               link={"/plan"}
-              linkText={useResponsive().isSmallDesktop ? "" : "Plan zajęć"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Schedule"}
               mobile={false}
             />
             <LinkMenu
               icon={logOut}
-              linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Log out"}
               mobile={false}
               link={"/login"}
               logOut={true}
@@ -74,12 +74,12 @@ export default function SideMenu() {
             <LinkMenu
               icon={tool}
               link={"/"}
-              linkText={useResponsive().isSmallDesktop ? "" : "Panel admina"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Admin panel"}
               mobile={false}
             />
             <LinkMenu
               icon={logOut}
-              linkText={useResponsive().isSmallDesktop ? "" : "Wyloguj"}
+              linkText={useResponsive().isSmallDesktop ? "" : "Log out"}
               mobile={false}
               link={"/login"}
               logOut={true}
