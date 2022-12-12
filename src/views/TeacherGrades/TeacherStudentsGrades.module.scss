@@ -51,6 +51,20 @@
     .table {
       border-top: 1px solid $gray;
 
+      .tableHeader {
+        padding: 0 20px 0 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 54px;
+        background-color: #fafafa;
+
+        .headerTitle {
+          font-size: 16px;
+          font-weight: 700;
+        }
+      }
+
       .tableButton {
         padding: 7px 15px 7px 15px;
         text-align: center;
@@ -66,6 +80,65 @@
         transition: background-color 0.5s ease;
         background-color: #1fa4c9;
       }
+
+      .markButton {
+        background-color: white;
+        color: black;
+        border: 0;
+        transition: background-color 0.5s ease;
+        transition: color 0.1s ease;
+        outline: none;
+      }
+
+      .markButton:hover {
+        transition: background-color 0.5s ease;
+        transition: color 0.1s ease;
+        color: white;
+        background-color: #00b8e9;
+      }
+      .markButton:focus {
+        outline: none;
+      }
     }
+  }
+}
+
+.modalFormBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .modalFormInput {
+    width: 100%;
+
+    input {
+      width: 100%;
+      height: 46px;
+      box-sizing: border-box;
+      padding-left: 15px;
+      font-size: 18px;
+      border: 1px solid $grey;
+      border-radius: 4px;
+    }
+  }
+}
+
+.modalCancel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    padding: 10px 20px 10px 20px;
+    color: white;
+    background-color: #eb3446;
+    border: 1px solid #d9d9d9;
+    transition: background-color 0.5s ease;
+  }
+
+  button:hover {
+    transition: background-color 0.5s ease;
+    background-color: #d43847;
   }
 }
