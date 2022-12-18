@@ -12,7 +12,7 @@ export default function NaviMobile() {
     <div className={styles.container}>
       <div className={styles.sideMenuContainer}>
         <div className={styles.content}>
-          <li onClick={() => onChangeMobileVisibility(!visibleMobile)}>
+          <li onClick={() => onChangeMobileVisibility(!openMobile)}>
             <div className={styles.logo}>
               <Link to="/">
                 <SvgIcon icon={smallLogo} />
@@ -64,7 +64,7 @@ export default function NaviMobile() {
             />
             <Link to="/bazaklientow">
               <li
-                onClick={() => onChangeMobileVisibility(!visibleMobile)}
+                onClick={() => onChangeMobileVisibility(!openMobile)}
                 className={
                   location.pathname.startsWith("/bazaklientow") ||
                   location.pathname === "/"

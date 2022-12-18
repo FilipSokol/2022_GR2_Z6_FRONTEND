@@ -6,6 +6,7 @@ import axios from "axios";
 
 export default function GroupsAdmin() {
   const [data, setData] = useState();
+
   const [departmentsData, setDepartmentsData] = useState();
   const [departmentId, setDepartmentId] = useState(1);
   const [editedGroupData, setEditedGroupData] = useState();
@@ -60,13 +61,13 @@ export default function GroupsAdmin() {
       .then(() => {
         getGroupsData(departmentId);
         notification.success({
-          message: "Pomyślnie dodano grupę.",
+          message: "Added a new group.",
         });
       })
       .catch((error) => {
         console.log(error);
         notification.error({
-          message: "Błąd dodawania grupy.",
+          message: "Error while adding a new group.",
         });
       });
   }
@@ -86,12 +87,12 @@ export default function GroupsAdmin() {
           getGroupsData(setEditedGroupData.groupId);
           handleCancel();
           notification.success({
-            message: "Pomyślnie edytowano grupę.",
+            message: "Eddited group information.",
           });
         } else {
           setEditedGroupData(null);
           notification.error({
-            message: "Błąd edytowania grupy.",
+            message: "Error while editing group information.",
           });
         }
       })
@@ -99,7 +100,7 @@ export default function GroupsAdmin() {
         setEditedGroupData(null);
         console.log(error);
         notification.error({
-          message: "Błąd edytowania grupy.",
+          message: "Error while editing group information.",
         });
       });
   }
@@ -110,28 +111,50 @@ export default function GroupsAdmin() {
         `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}`
       )
       .then((response) => {
+        console.log(response);
         if (response.status) {
           getGroupsData(departmentId);
           notification.success({
-            message: "Pomyślnie usunięto grupę.",
+            message: "Deleted group.",
           });
         } else {
           notification.error({
-            message: "Błąd usuwania grupy.",
+            message: "Error while deleting group.",
           });
         }
       })
       .catch(() => {
         notification.error({
-          message: "Błąd usuwania grupy.",
+          message: "Error while deleting group.",
         });
       });
   }
+
+  async function deleteStudent(dataStudents) {
+    await axios
+      .delete(
+        `http://localhost:5000/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students/${dataStudents.studentId}`
+      )
+      .then(() => {
+        getDepartmentsGroupData(dataStudents);
+        notification.success({
+          message: "Delete student successful.",
+        });
+      })
+      .catch(() => {
+        notification.error({
+          message: "Error while deleting student.",
+        });
+      });
+  }
+
   // ====================================
 
-  async function getDepartmentsGroupData(departmentId) {
+  async function getDepartmentsGroupData(dataStudents) {
     await axios
-      .get(`http://localhost:5000/api/departments/${departmentId}/groups`)
+      .get(
+        `http://localhost:5000/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students`
+      )
       .then((response) => {
         setGroupData(response.data);
         setAddGroupModalOpen(false);
@@ -139,7 +162,7 @@ export default function GroupsAdmin() {
       .catch((error) => {
         console.log(error);
         notification.error({
-          message: "Błąd dodawania grupy.",
+          message: "Error while downloading data.",
         });
       });
   }
@@ -147,7 +170,7 @@ export default function GroupsAdmin() {
   function handleNewGroup(values) {
     if (values.name === undefined) {
       notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
+        message: "Fill all fields.",
       });
     } else {
       setAddGroupModalOpen(false);
@@ -161,7 +184,7 @@ export default function GroupsAdmin() {
       (values.departmentId === undefined && "")
     ) {
       notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
+        message: "Fill all fields.",
       });
     } else {
       editGroup(values.name, values.departmentId);
@@ -180,7 +203,7 @@ export default function GroupsAdmin() {
       <div className={styles.tableBox}>
         <div className={styles.table}>
           <div className={styles.tableHeader}>
-            <div className={styles.headerTitle}>Grupy</div>
+            <div className={styles.headerTitle}>Groups</div>
             <div className={styles.headerSelectBox}>
               <select
                 onChange={(e) => {
@@ -200,7 +223,7 @@ export default function GroupsAdmin() {
                 }}
                 className={styles.tableHeaderButton}
               >
-                Dodaj Grupe
+                New Group
               </button>
             </div>
           </div>
@@ -212,43 +235,35 @@ export default function GroupsAdmin() {
               defaultPageSize: 10,
               size: "small",
             }}
-            locale={{
-              emptyText: "Brak Danych",
-              triggerDesc: "Zmień kolejność sortowania",
-              triggerAsc: "Włącz sortowanie",
-              cancelSort: "Wyłącz sortowanie",
-            }}
           >
             <Column title="Nazwa" dataIndex="name" key="name" width="16.6%" />
             <Column
-              dataIndex="departmentId"
-              key="departmentId"
               width="10%"
-              render={(departmentId) => (
+              render={(data) => (
                 <button
                   onClick={() => {
-                    getDepartmentsGroupData(departmentId);
+                    console.log(data);
+                    getDepartmentsGroupData(data);
                     setGroupModalOpen(true);
                   }}
                   className={styles.tableButton}
                 >
-                  Pokaż Plan Zajęć
+                  Show Schedule
                 </button>
               )}
             />
             <Column
-              dataIndex="departmentId"
-              key="departmentId"
               width="10%"
-              render={(departmentId) => (
+              render={(data) => (
                 <button
                   onClick={() => {
-                    getDepartmentsGroupData(departmentId);
+                    console.log(data);
+                    getDepartmentsGroupData(data);
                     setGroupModalOpen(true);
                   }}
                   className={styles.tableButton}
                 >
-                  Pokaż Studentów
+                  Students
                 </button>
               )}
             />
@@ -262,7 +277,7 @@ export default function GroupsAdmin() {
                   }}
                   className={styles.tableButton}
                 >
-                  Edytuj
+                  Edit
                 </button>
               )}
             />
@@ -275,7 +290,7 @@ export default function GroupsAdmin() {
                   }}
                   className={styles.tableButton}
                 >
-                  Usuń
+                  Delete
                 </button>
               )}
             />
@@ -295,7 +310,7 @@ export default function GroupsAdmin() {
           style: { borderRadius: 0 },
         }}
         centered
-        visible={warningModalOpen}
+        open={warningModalOpen}
         onCancel={() => {
           setEditedDepartmentId(null);
           setWarningModalOpen(false);
@@ -311,16 +326,16 @@ export default function GroupsAdmin() {
         </div>
       </Modal>
       <Modal
-        title="Grupy przypisane do wydziału"
-        cancelText="Anuluj"
+        title="All students in group"
         centered
-        visible={groupModalOpen}
+        open={groupModalOpen}
         onCancel={() => {
           setGroupData(undefined);
           setGroupModalOpen(false);
         }}
         footer={null}
       >
+        {console.log(groupData)}
         <div className={styles.modalBox}>
           <div className={styles.table}>
             <Table
@@ -328,25 +343,37 @@ export default function GroupsAdmin() {
               pagination={false}
               scroll={{ x: 200, y: 540 }}
               loading={groupData === undefined}
-              locale={{
-                emptyText: "Brak Danych",
-                triggerDesc: "Zmień kolejność sortowania",
-                triggerAsc: "Włącz sortowanie",
-                cancelSort: "Wyłącz sortowanie",
-              }}
             >
               <Column
-                title="Id"
-                width="10%"
-                render={(value, item, index) => index + 1}
+                title="Student Id"
+                dataIndex="studentId"
+                key="studentId"
+                width="20%"
               />
-              <Column title="Nazwa" dataIndex="name" key="name" width="20%" />
               <Column
-                width="10%"
+                title="Firstname"
+                dataIndex="firstName"
+                key="firstName"
+                width="20%"
+              />
+              <Column
+                title="Lastname"
+                dataIndex="lastName"
+                key="lastName"
+                width="20%"
+              />
+              <Column title="Email" dataIndex="email" key="email" width="20%" />
+              <Column
+                width="30%"
                 render={(data) => (
                   <button
                     onClick={() => {
-                      getDeleteGroup(data.departmentId, data.groupId);
+                      const studentData = {
+                        studentId: data.studentId,
+                        groupId: data.groupId,
+                        departmentId: departmentId,
+                      };
+                      deleteStudent(studentData);
                     }}
                     className={styles.tableButton}
                   >
@@ -369,7 +396,7 @@ export default function GroupsAdmin() {
         cancelButtonProps={{
           style: { borderRadius: 0 },
         }}
-        visible={addGroupModalOpen}
+        open={addGroupModalOpen}
         onCancel={handleCancel}
         onOk={form.submit}
       >
@@ -394,7 +421,7 @@ export default function GroupsAdmin() {
         cancelButtonProps={{
           style: { borderRadius: 0 },
         }}
-        visible={editDepartmentModalOpen}
+        open={editDepartmentModalOpen}
         onCancel={handleCancel}
         onOk={formEdit.submit}
       >

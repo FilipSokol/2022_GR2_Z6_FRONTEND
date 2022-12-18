@@ -13,7 +13,7 @@ export default function WarningModal(
       title={title}
       cancelText="Anuluj"
       centered
-      visible={warningModalOpen}
+      open={warningModalOpen}
       onCancel={() => {
         setWarningModalOpen(false);
       }}

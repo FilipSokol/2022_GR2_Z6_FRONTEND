@@ -4,7 +4,10 @@ import Column from "antd/lib/table/Column";
 import styles from "./DepartsmentsAdmin.module.scss";
 import axios from "axios";
 
-export default function DeparmentsAdmin() {
+export default function DeparmentsAdmin(props) {
+  const { dataDeparments, setDeparmentsData } = props;
+
+  console.log(dataDeparments);
   const [data, setData] = useState();
   const [editedDepartmentId, setEditedDepartmentId] = useState();
   const [editedDepartmentData, setEditedDepartmentData] = useState();
@@ -56,18 +59,18 @@ export default function DeparmentsAdmin() {
           getDepartmentsData();
           handleCancel();
           notification.success({
-            message: "Pomyślnie dodano wydział.",
+            message: "Add new department.",
           });
         } else {
           notification.error({
-            message: "Błąd dodawania wydziału.",
+            message: "Error while adding a new department.",
           });
         }
       })
       .catch((error) => {
         console.log(error);
         notification.error({
-          message: "Błąd dodawania wydziału.",
+          message: "Error while adding a new department.",
         });
       });
   }
@@ -88,12 +91,12 @@ export default function DeparmentsAdmin() {
           getDepartmentsData();
           handleCancel();
           notification.success({
-            message: "Pomyślnie edytowano wydział.",
+            message: "Eddited department information.",
           });
         } else {
           setEditedDepartmentData(null);
           notification.error({
-            message: "Błąd edytowania wydziału.",
+            message: "Error while editing department information.",
           });
         }
       })
@@ -101,7 +104,7 @@ export default function DeparmentsAdmin() {
         setEditedDepartmentData(null);
         console.log(error);
         notification.error({
-          message: "Błąd edytowania wydziału.",
+          message: "Error while editing department information.",
         });
       });
   }
@@ -114,18 +117,18 @@ export default function DeparmentsAdmin() {
           getDepartmentsData();
           setWarningModalOpen(false);
           notification.success({
-            message: "Pomyślnie usunięto wydział.",
+            message: "Deleted deparment successful.",
           });
         } else {
           notification.error({
-            message: "Błąd usuwania wydziału.",
+            message: "Error while deleting department.",
           });
         }
       })
       .catch((error) => {
         console.log(error);
         notification.error({
-          message: "Błąd usuwania wydziału.",
+          message: "Error while deleting department.",
         });
       });
   }
@@ -139,17 +142,17 @@ export default function DeparmentsAdmin() {
         if (response.status) {
           getDepartmentsGroupData(departmentId);
           notification.success({
-            message: "Pomyślnie usunięto grupę.",
+            message: "Deleted group successful.",
           });
         } else {
           notification.error({
-            message: "Błąd usuwania grupy.",
+            message: "Error while deleting department.",
           });
         }
       })
       .catch(() => {
         notification.error({
-          message: "Błąd usuwania grupy.",
+          message: "Error while deleting group.",
         });
       });
   }
@@ -162,7 +165,7 @@ export default function DeparmentsAdmin() {
       (values.postalCode === undefined && "")
     ) {
       notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
+        message: "Fill all fields.",
       });
     } else {
       createDepartment(
@@ -182,7 +185,7 @@ export default function DeparmentsAdmin() {
       (values.postalCode === undefined && "")
     ) {
       notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
+        message: "Fill all fields.",
       });
     } else {
       editDepartment(
@@ -207,7 +210,7 @@ export default function DeparmentsAdmin() {
       <div className={styles.tableBox}>
         <div className={styles.table}>
           <div className={styles.tableHeader}>
-            <div className={styles.headerTitle}>Wydziały</div>
+            <div className={styles.headerTitle}>Department</div>
             <div className={styles.headerButton}>
               <button
                 onClick={() => {
@@ -215,7 +218,7 @@ export default function DeparmentsAdmin() {
                 }}
                 className={styles.tableHeaderButton}
               >
-                Dodaj Wydział
+                New Department
               </button>
             </div>
           </div>
@@ -227,23 +230,17 @@ export default function DeparmentsAdmin() {
               defaultPageSize: 10,
               size: "small",
             }}
-            locale={{
-              emptyText: "Brak Danych",
-              triggerDesc: "Zmień kolejność sortowania",
-              triggerAsc: "Włącz sortowanie",
-              cancelSort: "Wyłącz sortowanie",
-            }}
           >
-            <Column title="Nazwa" dataIndex="name" key="name" width="16.6%" />
-            <Column title="Miasto" dataIndex="city" key="city" width="16.6%" />
+            <Column title="Name" dataIndex="name" key="name" width="16.6%" />
+            <Column title="City" dataIndex="city" key="city" width="16.6%" />
             <Column
-              title="Adres"
+              title="Address"
               dataIndex="address"
               key="address"
               width="16.6%"
             />
             <Column
-              title="Kod Pocztowy"
+              title="PostalCode"
               dataIndex="postalCode"
               key="postalCode"
               width="16.6%"
@@ -260,7 +257,7 @@ export default function DeparmentsAdmin() {
                   }}
                   className={styles.tableButton}
                 >
-                  Pokaż Grupy
+                  Show Groups
                 </button>
               )}
             />
@@ -274,7 +271,7 @@ export default function DeparmentsAdmin() {
                   }}
                   className={styles.tableButton}
                 >
-                  Edytuj
+                  Edit
                 </button>
               )}
             />
@@ -290,7 +287,7 @@ export default function DeparmentsAdmin() {
                   }}
                   className={styles.tableButton}
                 >
-                  Usuń
+                  Delete
                 </button>
               )}
             />
@@ -301,8 +298,6 @@ export default function DeparmentsAdmin() {
       <Modal
         title={false}
         closable={false}
-        cancelText="Anuluj"
-        okText="Tak"
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
         }}
@@ -310,7 +305,7 @@ export default function DeparmentsAdmin() {
           style: { borderRadius: 0 },
         }}
         centered
-        visible={warningModalOpen}
+        open={warningModalOpen}
         onCancel={() => {
           setEditedDepartmentId(null);
           setWarningModalOpen(false);
@@ -321,15 +316,14 @@ export default function DeparmentsAdmin() {
       >
         <div className={styles.modalBox}>
           <div className={styles.modalWarningText}>
-            Czy na pewno chcesz usunąć wydział?
+            Are you sure you want to delete the department?
           </div>
         </div>
       </Modal>
       <Modal
-        title="Grupy przypisane do wydziału"
-        cancelText="Anuluj"
+        title="Groups assigned to a department"
         centered
-        visible={groupModalOpen}
+        open={groupModalOpen}
         onCancel={() => {
           setGroupData(undefined);
           setGroupModalOpen(false);
@@ -343,19 +337,13 @@ export default function DeparmentsAdmin() {
               pagination={false}
               scroll={{ x: 200, y: 540 }}
               loading={groupData === undefined}
-              locale={{
-                emptyText: "Brak Danych",
-                triggerDesc: "Zmień kolejność sortowania",
-                triggerAsc: "Włącz sortowanie",
-                cancelSort: "Wyłącz sortowanie",
-              }}
             >
               <Column
                 title="Id"
                 width="10%"
                 render={(value, item, index) => index + 1}
               />
-              <Column title="Nazwa" dataIndex="name" key="name" width="20%" />
+              <Column title="Name" dataIndex="name" key="name" width="20%" />
               <Column
                 width="10%"
                 render={(data) => (
@@ -365,7 +353,7 @@ export default function DeparmentsAdmin() {
                     }}
                     className={styles.tableButton}
                   >
-                    Usuń
+                    Delete
                   </button>
                 )}
               />
@@ -374,9 +362,7 @@ export default function DeparmentsAdmin() {
         </div>
       </Modal>
       <Modal
-        title="Dodaj nowy wydział"
-        cancelText="Anuluj"
-        okText="Dodaj"
+        title="Add new department"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -384,7 +370,7 @@ export default function DeparmentsAdmin() {
         cancelButtonProps={{
           style: { borderRadius: 0 },
         }}
-        visible={addDepartmentModalOpen}
+        open={addDepartmentModalOpen}
         onCancel={handleCancel}
         onOk={form.submit}
       >
@@ -394,23 +380,21 @@ export default function DeparmentsAdmin() {
           className={styles.modalFormBox}
         >
           <Form.Item name="name" className={styles.modalFormInput}>
-            <input type="text" name="name" placeholder="Nazwa" />
+            <input type="text" name="name" placeholder="Name" />
           </Form.Item>
           <Form.Item name="address" className={styles.modalFormInput}>
-            <input type="text" name="address" placeholder="Adres" />
+            <input type="text" name="address" placeholder="Address" />
           </Form.Item>
           <Form.Item name="city" className={styles.modalFormInput}>
-            <input type="text" name="city" placeholder="Miasto" />
+            <input type="text" name="city" placeholder="City" />
           </Form.Item>
           <Form.Item name="postalCode" className={styles.modalFormInput}>
-            <input type="text" name="postalCode" placeholder="Kod pocztowy" />
+            <input type="text" name="postalCode" placeholder="PostalCode" />
           </Form.Item>
         </Form>
       </Modal>
       <Modal
-        title="Edytuj wydział"
-        cancelText="Anuluj"
-        okText="Edytuj"
+        title="Edit department"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -418,7 +402,7 @@ export default function DeparmentsAdmin() {
         cancelButtonProps={{
           style: { borderRadius: 0 },
         }}
-        visible={editDepartmentModalOpen}
+        open={editDepartmentModalOpen}
         onCancel={handleCancel}
         onOk={formEdit.submit}
       >
@@ -436,7 +420,7 @@ export default function DeparmentsAdmin() {
               type="text"
               name="name"
               defaultValue={editedDepartmentData?.name}
-              placeholder="Nazwa"
+              placeholder="Name"
             />
           </Form.Item>
           <Form.Item
@@ -448,7 +432,7 @@ export default function DeparmentsAdmin() {
               type="text"
               name="address"
               defaultValue={editedDepartmentData?.address}
-              placeholder="Adres"
+              placeholder="Address"
             />
           </Form.Item>
           <Form.Item
@@ -460,7 +444,7 @@ export default function DeparmentsAdmin() {
               type="text"
               name="city"
               defaultValue={editedDepartmentData?.city}
-              placeholder="Miasto"
+              placeholder="City"
             />
           </Form.Item>
           <Form.Item
@@ -472,7 +456,7 @@ export default function DeparmentsAdmin() {
               type="text"
               name="postalCode"
               defaultValue={editedDepartmentData?.postalCode}
-              placeholder="Kod pocztowy"
+              placeholder="PostalCode"
             />
           </Form.Item>
         </Form>

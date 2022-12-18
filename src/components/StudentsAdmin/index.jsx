@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Modal, notification, Table, Form } from "antd";
+import { Modal, Table, Form } from "antd";
 import Column from "antd/lib/table/Column";
 import styles from "./StudentsAdmin.module.scss";
 import axios from "axios";
+import { notification } from "antd";
 
 export default function StudentsAdmin() {
   const [data, setData] = useState();
-  const [editedDepartmentId, setEditedDepartmentId] = useState();
-  const [editedDepartmentData, setEditedDepartmentData] = useState();
-  const [groupData, setGroupData] = useState();
-  const [groupModalOpen, setGroupModalOpen] = useState(false);
-  const [warningModalOpen, setWarningModalOpen] = useState(false);
-  const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false);
-  const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false);
-
-  const [form] = Form.useForm();
-  const [formEdit] = Form.useForm();
+  const [addStudentModalOpen, setAddStudentModalOpen] = useState(false);
 
   useEffect(() => {
-    getDepartmentsData();
+    getAllStudents();
   }, []);
 
-  async function getDepartmentsData() {
+  const [form] = Form.useForm();
+
+  async function getAllStudents() {
     await axios
-      .get("http://localhost:5000/api/departments")
+      .get("http://localhost:5000/api/students")
       .then((response) => {
         setData(response.data);
       })
@@ -31,175 +25,61 @@ export default function StudentsAdmin() {
         console.log(error);
       });
   }
-
-  async function getDepartmentsGroupData(departmentId) {
+  async function addNewStudent(
+    departmentId,
+    groupId,
+    firstName,
+    lastName,
+    email
+  ) {
     await axios
-      .get(`http://localhost:5000/api/departments/${departmentId}/groups`)
-      .then((response) => {
-        setGroupData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  async function createDepartment(name, address, city, postalCode) {
-    await axios
-      .post("http://localhost:5000/api/departments", {
-        name: name,
-        address: address,
-        city: city,
-        postalCode: postalCode,
-      })
-      .then((response) => {
-        if (response.status) {
-          getDepartmentsData();
-          handleCancel();
-          notification.success({
-            message: "Pomyślnie dodano wydział.",
-          });
-        } else {
-          notification.error({
-            message: "Błąd dodawania wydziału.",
-          });
+      .post(
+        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}/students`,
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
         }
-      })
-      .catch((error) => {
-        console.log(error);
-        notification.error({
-          message: "Błąd dodawania wydziału.",
-        });
-      });
-  }
-
-  async function editDepartment(departmentId, name, address, city, postalCode) {
-    console.log(departmentId, name, address, city, postalCode);
-
-    await axios
-      .put(`http://localhost:5000/api/departments/${departmentId}`, {
-        name: name,
-        address: address,
-        city: city,
-        postalCode: postalCode,
-      })
-      .then((response) => {
-        if (response.status) {
-          setEditedDepartmentData(null);
-          getDepartmentsData();
-          handleCancel();
-          notification.success({
-            message: "Pomyślnie edytowano wydział.",
-          });
-        } else {
-          setEditedDepartmentData(null);
-          notification.error({
-            message: "Błąd edytowania wydziału.",
-          });
-        }
-      })
-      .catch((error) => {
-        setEditedDepartmentData(null);
-        console.log(error);
-        notification.error({
-          message: "Błąd edytowania wydziału.",
-        });
-      });
-  }
-
-  async function deleteDepartment(departmentId) {
-    await axios
-      .delete(`http://localhost:5000/api/departments/${departmentId}`)
-      .then((response) => {
-        if (response.status) {
-          getDepartmentsData();
-          setWarningModalOpen(false);
-          notification.success({
-            message: "Pomyślnie usunięto wydział.",
-          });
-        } else {
-          notification.error({
-            message: "Błąd usuwania wydziału.",
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        notification.error({
-          message: "Błąd usuwania wydziału.",
-        });
-      });
-  }
-
-  async function getDeleteGroup(departmentId, groupId) {
-    await axios
-      .delete(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}`
       )
-      .then((response) => {
-        if (response.status) {
-          getDepartmentsGroupData(departmentId);
-          notification.success({
-            message: "Pomyślnie usunięto grupę.",
-          });
-        } else {
-          notification.error({
-            message: "Błąd usuwania grupy.",
-          });
-        }
+      .then(() => {
+        notification.success({
+          message: "Added a new student.",
+        });
+        getAllStudents();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         notification.error({
-          message: "Błąd usuwania grupy.",
+          message: "Error while adding new student.",
         });
       });
   }
 
-  function handleNewDepartment(values) {
+  function handleNewStudent(values) {
     if (
-      (values.name === undefined && "") ||
-      (values.address === undefined && "") ||
-      (values.city === undefined && "") ||
-      (values.postalCode === undefined && "")
+      (values.departmentId === undefined && "") ||
+      (values.groupId === undefined && "") ||
+      (values.firstName === undefined && "") ||
+      (values.lastName === undefined && "") ||
+      (values.email === undefined && "")
     ) {
       notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
+        message: "Fill all fields.",
       });
     } else {
-      createDepartment(
-        values.name,
-        values.address,
-        values.city,
-        values.postalCode
-      );
-    }
-  }
-
-  function handleEditDepartment(values) {
-    if (
-      (values.name === undefined && "") ||
-      (values.address === undefined && "") ||
-      (values.city === undefined && "") ||
-      (values.postalCode === undefined && "")
-    ) {
-      notification.error({
-        message: "Proszę wypełnić wszystkie pola.",
-      });
-    } else {
-      editDepartment(
-        editedDepartmentData.departmentId,
-        values.name,
-        values.address,
-        values.city,
-        values.postalCode
+      addNewStudent(
+        values.departmentId,
+        values.groupId,
+        values.firstName,
+        values.lastName,
+        values.email
       );
     }
   }
 
   function handleCancel() {
-    setEditedDepartmentData(null);
     form.resetFields();
-    setEditDepartmentModalOpen(false);
-    setAddDepartmentModalOpen(false);
+    setAddStudentModalOpen(false);
   }
 
   return (
@@ -207,15 +87,15 @@ export default function StudentsAdmin() {
       <div className={styles.tableBox}>
         <div className={styles.table}>
           <div className={styles.tableHeader}>
-            <div className={styles.headerTitle}>Studenci</div>
+            <div className={styles.headerTitle}>Students</div>
             <div className={styles.headerButton}>
               <button
                 onClick={() => {
-                  setAddDepartmentModalOpen(true);
+                  setAddStudentModalOpen(true);
                 }}
                 className={styles.tableHeaderButton}
               >
-                Dodaj Wydział
+                New Student
               </button>
             </div>
           </div>
@@ -227,156 +107,38 @@ export default function StudentsAdmin() {
               defaultPageSize: 10,
               size: "small",
             }}
-            locale={{
-              emptyText: "Brak Danych",
-              triggerDesc: "Zmień kolejność sortowania",
-              triggerAsc: "Włącz sortowanie",
-              cancelSort: "Wyłącz sortowanie",
-            }}
           >
-            <Column title="Nazwa" dataIndex="name" key="name" width="16.6%" />
-            <Column title="Miasto" dataIndex="city" key="city" width="16.6%" />
             <Column
-              title="Adres"
-              dataIndex="address"
-              key="address"
+              title="Student Id"
+              dataIndex="studentId"
+              key="studentId"
               width="16.6%"
             />
             <Column
-              title="Kod Pocztowy"
-              dataIndex="postalCode"
-              key="postalCode"
+              title="Group Id"
+              dataIndex="groupId"
+              key="groupId"
               width="16.6%"
             />
             <Column
-              dataIndex="departmentId"
-              key="departmentId"
-              width="10%"
-              render={(departmentId) => (
-                <button
-                  onClick={() => {
-                    getDepartmentsGroupData(departmentId);
-                    setGroupModalOpen(true);
-                  }}
-                  className={styles.tableButton}
-                >
-                  Pokaż Grupy
-                </button>
-              )}
+              title="Firstname"
+              dataIndex="firstName"
+              key="firstName"
+              width="16.6%"
             />
             <Column
-              width="8%"
-              render={(data) => (
-                <button
-                  onClick={() => {
-                    setEditedDepartmentData(data);
-                    setEditDepartmentModalOpen(true);
-                  }}
-                  className={styles.tableButton}
-                >
-                  Edytuj
-                </button>
-              )}
+              title="Lastname"
+              dataIndex="lastName"
+              key="lastName"
+              width="16.6%"
             />
-            <Column
-              dataIndex="departmentId"
-              key="departmentId"
-              width="8%"
-              render={(departmentId) => (
-                <button
-                  onClick={() => {
-                    setEditedDepartmentId(departmentId);
-                    setWarningModalOpen(true);
-                  }}
-                  className={styles.tableButton}
-                >
-                  Usuń
-                </button>
-              )}
-            />
+            <Column title="Email" dataIndex="Email" key="email" width="10%" />
           </Table>
         </div>
       </div>
 
       <Modal
-        title={false}
-        closable={false}
-        cancelText="Anuluj"
-        okText="Tak"
-        okButtonProps={{
-          style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
-        }}
-        cancelButtonProps={{
-          style: { borderRadius: 0 },
-        }}
-        centered
-        visible={warningModalOpen}
-        onCancel={() => {
-          setEditedDepartmentId(null);
-          setWarningModalOpen(false);
-        }}
-        onOk={() => {
-          deleteDepartment(editedDepartmentId);
-        }}
-      >
-        <div className={styles.modalBox}>
-          <div className={styles.modalWarningText}>
-            Czy na pewno chcesz usunąć wydział?
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        title="Grupy przypisane do wydziału"
-        cancelText="Anuluj"
-        centered
-        visible={groupModalOpen}
-        onCancel={() => {
-          setGroupData(undefined);
-          setGroupModalOpen(false);
-        }}
-        footer={null}
-      >
-        <div className={styles.modalBox}>
-          <div className={styles.table}>
-            <Table
-              dataSource={groupData}
-              pagination={false}
-              scroll={{ x: 200, y: 540 }}
-              loading={groupData === undefined}
-              locale={{
-                emptyText: "Brak Danych",
-                triggerDesc: "Zmień kolejność sortowania",
-                triggerAsc: "Włącz sortowanie",
-                cancelSort: "Wyłącz sortowanie",
-              }}
-            >
-              <Column
-                title="Id"
-                width="10%"
-                render={(value, item, index) => index + 1}
-              />
-              <Column title="Nazwa" dataIndex="name" key="name" width="20%" />
-              <Column
-                width="10%"
-                render={(data) => (
-                  <button
-                    onClick={() => {
-                      getDeleteGroup(data.departmentId, data.groupId);
-                    }}
-                    className={styles.tableButton}
-                  >
-                    Usuń
-                  </button>
-                )}
-              />
-            </Table>
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        title="Dodaj nowy wydział"
-        cancelText="Anuluj"
-        okText="Dodaj"
+        title="Add a new student"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -384,96 +146,33 @@ export default function StudentsAdmin() {
         cancelButtonProps={{
           style: { borderRadius: 0 },
         }}
-        visible={addDepartmentModalOpen}
+        open={addStudentModalOpen}
         onCancel={handleCancel}
         onOk={form.submit}
       >
         <Form
           form={form}
-          onFinish={handleNewDepartment}
+          onFinish={handleNewStudent}
           className={styles.modalFormBox}
         >
-          <Form.Item name="name" className={styles.modalFormInput}>
-            <input type="text" name="name" placeholder="Nazwa" />
-          </Form.Item>
-          <Form.Item name="address" className={styles.modalFormInput}>
-            <input type="text" name="address" placeholder="Adres" />
-          </Form.Item>
-          <Form.Item name="city" className={styles.modalFormInput}>
-            <input type="text" name="city" placeholder="Miasto" />
-          </Form.Item>
-          <Form.Item name="postalCode" className={styles.modalFormInput}>
-            <input type="text" name="postalCode" placeholder="Kod pocztowy" />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title="Edytuj wydział"
-        cancelText="Anuluj"
-        okText="Edytuj"
-        centered
-        okButtonProps={{
-          style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
-        }}
-        cancelButtonProps={{
-          style: { borderRadius: 0 },
-        }}
-        visible={editDepartmentModalOpen}
-        onCancel={handleCancel}
-        onOk={formEdit.submit}
-      >
-        <Form
-          form={formEdit}
-          onFinish={handleEditDepartment}
-          className={styles.modalFormBox}
-        >
-          <Form.Item
-            initialValue={editedDepartmentData?.name}
-            name="name"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="departmentId" className={styles.modalFormInput}>
             <input
-              type="text"
-              name="name"
-              defaultValue={editedDepartmentData?.name}
-              placeholder="Nazwa"
+              type="number"
+              name="departmentId"
+              placeholder="Department Id"
             />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.address}
-            name="address"
-            className={styles.modalFormInput}
-          >
-            <input
-              type="text"
-              name="address"
-              defaultValue={editedDepartmentData?.address}
-              placeholder="Adres"
-            />
+          <Form.Item name="groupId" className={styles.modalFormInput}>
+            <input type="number" name="groupId" placeholder="Group Id" />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.city}
-            name="city"
-            className={styles.modalFormInput}
-          >
-            <input
-              type="text"
-              name="city"
-              defaultValue={editedDepartmentData?.city}
-              placeholder="Miasto"
-            />
+          <Form.Item name="firstName" className={styles.modalFormInput}>
+            <input type="text" name="firstName" placeholder="FirstName" />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.postalCode}
-            name="postalCode"
-            className={styles.modalFormInput}
-          >
-            <input
-              type="text"
-              name="postalCode"
-              defaultValue={editedDepartmentData?.postalCode}
-              placeholder="Kod pocztowy"
-            />
+          <Form.Item name="lastName" className={styles.modalFormInput}>
+            <input type="text" name="lastName" placeholder="LastName" />
+          </Form.Item>
+          <Form.Item name="email" className={styles.modalFormInput}>
+            <input type="text" name="email" placeholder="Email" />
           </Form.Item>
         </Form>
       </Modal>
