@@ -3,6 +3,15 @@ import { Modal, notification, Table, Form } from "antd";
 import Column from "antd/lib/table/Column";
 import styles from "./GroupsAdmin.module.scss";
 import axios from "axios";
+import {
+  Inject,
+  ScheduleComponent,
+  Day,
+  Week,
+  Month,
+  ViewsDirective,
+  ViewDirective,
+} from "@syncfusion/ej2-react-schedule";
 
 export default function GroupsAdmin() {
   const [data, setData] = useState();
@@ -12,6 +21,8 @@ export default function GroupsAdmin() {
   const [editedGroupData, setEditedGroupData] = useState();
 
   const [addGroupModalOpen, setAddGroupModalOpen] = useState(false);
+  const [showScheduleForGroup, setShowScheduleForGroup] = useState(false);
+  const [scheduleData, setScheduleData] = useState([]);
 
   const [editedDepartmentId, setEditedDepartmentId] = useState();
   const [groupData, setGroupData] = useState();
@@ -148,6 +159,36 @@ export default function GroupsAdmin() {
       });
   }
 
+  async function getGroupSchedule(groupId) {
+    if (groupId) {
+      await axios
+        .get(`http://localhost:5000/api/schedules/${groupId}`)
+        .then((response) => {
+          let id = 0;
+          let newArray = [];
+          response.data.forEach((element) => {
+            let obj = {
+              Id: id,
+              Subject: element.name,
+              StartTime: element.startTime,
+              EndTime: element.endTime,
+              IsAllDay: false,
+            };
+            id = id + 1;
+            newArray.push(obj);
+
+            if (response.data.length === newArray.length) {
+              setScheduleData(newArray);
+            }
+          });
+        })
+
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   // ====================================
 
   async function getDepartmentsGroupData(dataStudents) {
@@ -242,9 +283,8 @@ export default function GroupsAdmin() {
               render={(data) => (
                 <button
                   onClick={() => {
-                    console.log(data);
-                    getDepartmentsGroupData(data);
-                    setGroupModalOpen(true);
+                    getGroupSchedule(data.groupId);
+                    setShowScheduleForGroup(true);
                   }}
                   className={styles.tableButton}
                 >
@@ -257,7 +297,6 @@ export default function GroupsAdmin() {
               render={(data) => (
                 <button
                   onClick={() => {
-                    console.log(data);
                     getDepartmentsGroupData(data);
                     setGroupModalOpen(true);
                   }}
@@ -335,7 +374,6 @@ export default function GroupsAdmin() {
         }}
         footer={null}
       >
-        {console.log(groupData)}
         <div className={styles.modalBox}>
           <div className={styles.table}>
             <Table
@@ -377,7 +415,7 @@ export default function GroupsAdmin() {
                     }}
                     className={styles.tableButton}
                   >
-                    Usuń
+                    Delete
                   </button>
                 )}
               />
@@ -386,9 +424,8 @@ export default function GroupsAdmin() {
         </div>
       </Modal>
       <Modal
-        title="Dodaj nową grupę"
-        cancelText="Anuluj"
-        okText="Dodaj"
+        title="Add new group"
+        okText="Add"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -411,9 +448,8 @@ export default function GroupsAdmin() {
         </Form>
       </Modal>
       <Modal
-        title="Edytuj wydział"
-        cancelText="Anuluj"
-        okText="Edytuj"
+        title="Edit group"
+        okText="Edit"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -455,6 +491,44 @@ export default function GroupsAdmin() {
             />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="Group schedule"
+        width={1000}
+        footer={null}
+        open={showScheduleForGroup}
+        onCancel={() => {
+          setScheduleData([]);
+          setShowScheduleForGroup(false);
+        }}
+      >
+        <div className={styles.timeTable}>
+          {scheduleData.length !== 0 ? (
+            <ScheduleComponent
+              currentView="Week"
+              startHour="06:00"
+              endHour="21:00"
+              readOnly={true}
+              showQuickInfo={false}
+              allowMultiDrag={false}
+              allowMultiCellSelection={false}
+              allowMultiRowSelection={false}
+              selectedDate={new Date()}
+              eventSettings={{ dataSource: scheduleData }}
+            >
+              <ViewsDirective>
+                <ViewDirective option="Day" />
+                <ViewDirective option="Week" />
+                <ViewDirective option="Month" />
+              </ViewsDirective>
+              <Inject services={[Day, Week, Month]} />
+            </ScheduleComponent>
+          ) : (
+            <div>No Data</div>
+          )}
+
+          {console.log(scheduleData)}
+        </div>
       </Modal>
     </div>
   );

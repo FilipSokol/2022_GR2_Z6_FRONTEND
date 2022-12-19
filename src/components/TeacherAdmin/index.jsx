@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Table, Form } from "antd";
 import Column from "antd/lib/table/Column";
-import styles from "./StudentsAdmin.module.scss";
+import styles from "./TeacherAdmin.module.scss";
 import axios from "axios";
 import { notification } from "antd";
 
-export default function StudentsAdmin() {
+export default function TeacherAdmin() {
   const [data, setData] = useState();
   const [addStudentModalOpen, setAddStudentModalOpen] = useState(false);
 
   useEffect(() => {
-    getAllStudents();
+    getAllTeacher();
   }, []);
 
   const [form] = Form.useForm();
 
-  async function getAllStudents() {
+  async function getAllTeacher() {
     await axios
-      .get("http://localhost:5000/api/students")
+      .get("http://localhost:5000/api/teacher")
       .then((response) => {
         setData(response.data);
       })
@@ -25,32 +25,25 @@ export default function StudentsAdmin() {
         console.log(error);
       });
   }
-  async function addNewStudent(
-    departmentId,
-    groupId,
-    firstName,
-    lastName,
-    email
-  ) {
+
+  async function addNewTeacher(departmentId, firstName, lastName, email) {
     await axios
-      .post(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}/students`,
-        {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-        }
-      )
+      .post(`http://localhost:5000/api/departments/${departmentId}/teachers`, {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      })
       .then(() => {
         notification.success({
-          message: "Added a new student.",
+          message: "Added a new teacher.",
         });
-        getAllStudents();
+        getAllTeacher();
+        setAddStudentModalOpen(false);
       })
       .catch((err) => {
         console.log(err);
         notification.error({
-          message: "Error while adding new student.",
+          message: "Error while adding new teacher.",
         });
       });
   }
@@ -58,7 +51,6 @@ export default function StudentsAdmin() {
   function handleNewStudent(values) {
     if (
       (values.departmentId === undefined && "") ||
-      (values.groupId === undefined && "") ||
       (values.firstName === undefined && "") ||
       (values.lastName === undefined && "") ||
       (values.email === undefined && "")
@@ -67,9 +59,8 @@ export default function StudentsAdmin() {
         message: "Fill all fields.",
       });
     } else {
-      addNewStudent(
+      addNewTeacher(
         values.departmentId,
-        values.groupId,
         values.firstName,
         values.lastName,
         values.email
@@ -87,7 +78,7 @@ export default function StudentsAdmin() {
       <div className={styles.tableBox}>
         <div className={styles.table}>
           <div className={styles.tableHeader}>
-            <div className={styles.headerTitle}>Students</div>
+            <div className={styles.headerTitle}>Teachers</div>
             <div className={styles.headerButton}>
               <button
                 onClick={() => {
@@ -95,7 +86,7 @@ export default function StudentsAdmin() {
                 }}
                 className={styles.tableHeaderButton}
               >
-                New Student
+                New Teacher
               </button>
             </div>
           </div>
@@ -109,15 +100,15 @@ export default function StudentsAdmin() {
             }}
           >
             <Column
-              title="Student Id"
-              dataIndex="studentId"
-              key="studentId"
+              title="Teacher Id"
+              dataIndex="teacherId"
+              key="teacherId"
               width="16.6%"
             />
             <Column
-              title="Group Id"
-              dataIndex="groupId"
-              key="groupId"
+              title="Department Id"
+              dataIndex="departmentId"
+              key="departmentId"
               width="16.6%"
             />
             <Column
@@ -137,7 +128,7 @@ export default function StudentsAdmin() {
       </div>
 
       <Modal
-        title="Add a new student"
+        title="Add a new teacher"
         centered
         okButtonProps={{
           style: { backgroundColor: "#00B8E9", border: 0, borderRadius: 0 },
@@ -160,9 +151,6 @@ export default function StudentsAdmin() {
               name="departmentId"
               placeholder="Department Id"
             />
-          </Form.Item>
-          <Form.Item name="groupId" className={styles.modalFormInput}>
-            <input type="number" name="groupId" placeholder="Group Id" />
           </Form.Item>
           <Form.Item name="firstName" className={styles.modalFormInput}>
             <input type="text" name="firstName" placeholder="FirstName" />

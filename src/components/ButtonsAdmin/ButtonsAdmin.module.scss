@@ -7,6 +7,25 @@
 
   .tableBox {
     width: 100%;
+    padding: 0 15px 0 15px;
+
+    .tableButton {
+      width: 150px;
+      padding: 15px 0 15px 0;
+      white-space: nowrap;
+      text-align: center;
+      border: 1;
+      color: $white;
+      background-color: #00b8e9;
+      border: 1px;
+      outline: none;
+      transition: background-color 0.5s ease;
+    }
+
+    .tableButton:hover {
+      transition: background-color 0.5s ease;
+      background-color: #1fa4c9;
+    }
     .table {
       .pagination {
         padding-right: 15px;
@@ -20,22 +39,6 @@
         height: 54px;
         background-color: #fafafa;
 
-        .headerSelectBox {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          outline: none;
-
-          select {
-            padding: 7px 15px 7px 15px;
-            border: 1px solid $grey;
-            outline: none;
-          }
-          select:focus {
-            outline: none;
-          }
-        }
-
         .headerTitle {
           font-weight: 700;
           font-size: 20px;
@@ -44,7 +47,7 @@
         .headerButton {
           height: 100%;
           display: flex;
-          align-items: center;
+          align-items: flex-end;
 
           .tableHeaderButton {
             width: 150px;
@@ -143,11 +146,4 @@
       border-radius: 4px;
     }
   }
-}
-
-.timeTable {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 950px;
 }
