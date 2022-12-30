@@ -7,7 +7,7 @@ import SvgIcon from "../SvgIcon";
 import styles from "./LinkMenu.module.scss";
 
 export default function LinkMenu(props) {
-  const { icon, link, linkText, mobile, logOut } = props;
+  const { icon, link, linkText, logOut } = props;
 
   const navigate = useNavigate();
   const location = useLocation();

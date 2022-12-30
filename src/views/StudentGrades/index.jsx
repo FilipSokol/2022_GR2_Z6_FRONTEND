@@ -9,38 +9,8 @@ import axios from "axios";
 import styles from "./StudentGrades.module.scss";
 
 export default function StudentGrades(userData) {
-  // console.log(userData);
-  const userGrades = [
-    {
-      id: "1",
-      subject: "Programowanie niskopoziomowe",
-      grades: "2, 2, 2, 2, 2, 2, 2",
-    },
-    {
-      id: "2",
-      subject: "Technika cyfrowa",
-      grades: "2, 2, 2, 2, 2",
-    },
-    {
-      id: "3",
-      subject: "Analiza i przetwarzanie obrazów cyfrowych",
-      grades: "5, 4, 3, 4",
-    },
-  ];
-
   const [data, setData] = useState([]);
 
-  // const getAllSubjects = () => {
-  //   axios
-  //     .get(
-  //       `http://localhost:5000/api/students/${userData.userData.StudentId}/marks`
-  //     )
-  //     .then((res) => {
-  //       setData(res.data);
-  //     });
-  // };
-
-  console.log(userData.userData.StudentId);
   const getAllSubjectsWithGrades = () => {
     axios
       .get(
@@ -55,16 +25,10 @@ export default function StudentGrades(userData) {
     getAllSubjectsWithGrades();
   }, []);
 
-  console.log(data);
-
   return (
     <div className={styles.container}>
       <div className={styles.headerBox}>
-        <div className={styles.semesterBox}>
-          {location.pathname !== "/oceny/ogolne"
-            ? "Semestr zimowy 2022/2023"
-            : null}
-        </div>
+        <div className={styles.semesterBox}>User grades</div>
 
         <div className={styles.buttonsBox}>
           <div
@@ -75,7 +39,11 @@ export default function StudentGrades(userData) {
                 : styles.buttonNotActive
             }
           >
-            Oceny bieżące
+            {
+              userData.userData[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+              ]
+            }
           </div>
         </div>
       </div>
@@ -86,21 +54,10 @@ export default function StudentGrades(userData) {
               dataSource={data}
               pagination={false}
               loading={data === undefined}
-              locale={{
-                emptyText: "Brak Danych",
-                triggerDesc: "Zmień kolejność sortowania",
-                triggerAsc: "Włącz sortowanie",
-                cancelSort: "Wyłącz sortowanie",
-              }}
             >
+              <Column title="Subject" dataIndex="name" key="name" width="50%" />
               <Column
-                title="Przedmiot"
-                dataIndex="name"
-                key="name"
-                width="50%"
-              />
-              <Column
-                title="Oceny"
+                title="Grades"
                 dataIndex="marks"
                 key="marks"
                 width="50%"

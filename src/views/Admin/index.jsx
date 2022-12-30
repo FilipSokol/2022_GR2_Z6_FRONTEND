@@ -13,10 +13,7 @@ export default function AdminPanel() {
   return (
     <div className={styles.container}>
       <ButtonsAdmin />
-      <DeparmentsAdmin
-        dataDeparments={dataDeparments}
-        setDeparmentsData={setDeparmentsData}
-      />
+      <DeparmentsAdmin />
       <GroupsAdmin />
       <StudentsAdmin />
       <TeacherAdmin />

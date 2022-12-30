@@ -18,7 +18,10 @@ export default function TeacherStudentsGrades(userData) {
   const [editMarkModalOpen, setEditMarkModalOpen] = useState(false);
 
   const [studentInfo, setStudentInfo] = useState();
-  const [editedMarkData, setEditedMarkData] = useState();
+  const [editedMarkData, setEditedMarkData] = useState(undefined);
+
+  const [dataDesc, setDataDesc] = useState(null);
+  const [markDesc, setMarkDesc] = useState(null);
 
   const [form] = Form.useForm();
   const [formEdit] = Form.useForm();
@@ -77,26 +80,25 @@ export default function TeacherStudentsGrades(userData) {
       });
   }
 
-  async function udpateMark(values) {
-    console.log(editedMarkData);
+  async function udpateMark() {
     await axios
       .put(
         `http://localhost:5000/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`,
         {
           dateOfIssue: new Date(),
           subjectId: editedMarkData.subjectId,
-          description: values.description,
-          markValue: values.markValue,
+          description: dataDesc,
+          markValue: markDesc,
         }
       )
-      .then(() => {
+      .then((res) => {
         notification.success({
           message: "Mark edited successfully.",
         });
         getGroupStudentsWithGrades();
       })
 
-      .catch(() => {
+      .catch((err) => {
         notification.error({
           message: "Error while editing mark.",
         });
@@ -105,7 +107,7 @@ export default function TeacherStudentsGrades(userData) {
 
   async function deleteMark() {
     await axios
-      .get(
+      .delete(
         `http://localhost:5000/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`
       )
       .then((response) => {
@@ -113,6 +115,7 @@ export default function TeacherStudentsGrades(userData) {
           message: "Mark deleted successfully.",
         });
         getGroupStudentsWithGrades();
+        setEditMarkModalOpen(false);
       })
 
       .catch((error) => {
@@ -151,31 +154,33 @@ export default function TeacherStudentsGrades(userData) {
     form.resetFields();
   }
 
-  function handleEditMark(values) {
-    if (values.description.length < 0) {
+  function handleEditMark() {
+    if (dataDesc.length <= 0) {
       notification.error({
         message: "Please fill all fields.",
       });
       return null;
     }
 
-    if (values.markValue.length < 0) {
+    if (markDesc.length <= 0) {
       notification.error({
         message: "Please fill all fields.",
       });
       return null;
     }
 
-    if (values.markValue > 5 || values.markValue < 2) {
+    if (markDesc > 5 || markDesc < 2) {
       notification.error({
         message: "Mark range must be between 2 to 5.",
       });
       return null;
     }
 
-    udpateMark(values);
+    udpateMark();
+
     setEditMarkModalOpen(false);
     form.resetFields();
+    setEditedMarkData(undefined);
   }
 
   useEffect(() => {
@@ -186,11 +191,22 @@ export default function TeacherStudentsGrades(userData) {
     getGroupStudentsWithGrades();
   }, [groupId]);
 
+  useEffect(() => {
+    formEdit.resetFields();
+    form.resetFields();
+  }, [editMarkModalOpen]);
+
+  useEffect(() => {
+    setDataDesc(editedMarkData?.description);
+    setMarkDesc(editedMarkData?.markValue);
+  }, [editMarkModalOpen]);
+
   function handleCancel() {
     setNewMarkModalOpen(false);
     setEditMarkModalOpen(false);
-    form.resetFields();
+    setEditedMarkData(undefined);
     formEdit.resetFields();
+    form.resetFields();
   }
 
   return (
@@ -210,75 +226,79 @@ export default function TeacherStudentsGrades(userData) {
         })}
       </div>
       <div className={styles.groupContext}>
-        {data.map((subject) => {
-          return (
-            <div className={styles.table}>
-              <div className={styles.tableHeader}>
-                <div className={styles.headerTitle}>{subject.name}</div>
+        {data.length !== 0 ? (
+          data.map((subject) => {
+            return (
+              <div className={styles.table}>
+                <div className={styles.tableHeader}>
+                  <div className={styles.headerTitle}>{subject.name}</div>
+                </div>
+                <Table
+                  dataSource={subject.students}
+                  pagination={false}
+                  loading={subject.students === undefined}
+                >
+                  <Column
+                    title="Name"
+                    dataIndex="firstName"
+                    key="firstName"
+                    width="33%"
+                    render={(firstName, data) => {
+                      return <div>{data.firstName + " " + data.lastName}</div>;
+                    }}
+                  />
+                  <Column
+                    title="Marks"
+                    dataIndex="marks"
+                    key="marks"
+                    width="50%"
+                    render={(marks, data) => (
+                      <div>
+                        {marks.map((mark, idx) => {
+                          return (
+                            <>
+                              <button
+                                className={styles.markButton}
+                                onClick={() => {
+                                  setEditedMarkData(mark);
+                                  setEditMarkModalOpen(true);
+                                }}
+                              >
+                                {mark.markValue}
+                              </button>
+                              {idx < marks.length - 1 ? ", " : ""}
+                            </>
+                          );
+                        })}
+                      </div>
+                    )}
+                  />
+                  <Column
+                    dataIndex="marks"
+                    key="marks"
+                    width="16.5%"
+                    render={(marks, data) => (
+                      <button
+                        onClick={() => {
+                          setNewMarkModalOpen(true);
+                          setStudentInfo({
+                            studentId: data.studentId,
+                            subjectId: data.marks[0].subjectId,
+                          });
+                        }}
+                        className={styles.tableButton}
+                      >
+                        Add Mark
+                      </button>
+                    )}
+                  />
+                </Table>
               </div>
-              <Table
-                dataSource={subject.students}
-                pagination={false}
-                loading={subject.students === undefined}
-              >
-                <Column
-                  title="Name"
-                  dataIndex="firstName"
-                  key="firstName"
-                  width="33%"
-                  render={(firstName, data) => {
-                    return <div>{data.firstName + " " + data.lastName}</div>;
-                  }}
-                />
-                <Column
-                  title="Marks"
-                  dataIndex="marks"
-                  key="marks"
-                  width="50%"
-                  render={(marks, data) => (
-                    <div>
-                      {marks.map((mark, idx) => {
-                        return (
-                          <>
-                            <button
-                              className={styles.markButton}
-                              onClick={() => {
-                                setEditedMarkData(mark);
-                                setEditMarkModalOpen(true);
-                              }}
-                            >
-                              {mark.markValue}
-                            </button>
-                            {idx < marks.length - 1 ? ", " : ""}
-                          </>
-                        );
-                      })}
-                    </div>
-                  )}
-                />
-                <Column
-                  dataIndex="marks"
-                  key="marks"
-                  width="16.5%"
-                  render={(marks, data) => (
-                    <button
-                      onClick={() => {
-                        setNewMarkModalOpen(true);
-                        setStudentInfo({
-                          studentId: data.studentId,
-                          subjectId: data.marks[0].subjectId,
-                        });
-                      }}
-                      className={styles.tableButton}
-                    >
-                      Add Mark
-                    </button>
-                  )}
-                />
-              </Table>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <div className={styles.dataNotification}>No data</div>
+        )}
       </div>
       <Modal
         title="Add mark"
@@ -344,38 +364,39 @@ export default function TeacherStudentsGrades(userData) {
         onCancel={handleCancel}
         onOk={formEdit.submit}
       >
-        <Form
-          form={formEdit}
-          onFinish={handleEditMark}
-          className={styles.modalFormBox}
-        >
-          <Form.Item
-            name="description"
-            className={styles.modalFormInput}
-            initialValue={editedMarkData?.description}
+        {editedMarkData && (
+          <Form
+            form={formEdit}
+            preserve={false}
+            onFinish={handleEditMark}
+            className={styles.modalFormBox}
           >
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              defaultValue={editedMarkData?.description}
-            />
-          </Form.Item>
-          <Form.Item
-            name="markValue"
-            className={styles.modalFormInput}
-            initialValue={editedMarkData?.markValue}
-          >
-            <input
-              type="number"
-              min="1"
-              max="5"
-              name="markValue"
-              placeholder="Mark value"
-              defaultValue={editedMarkData?.markValue}
-            />
-          </Form.Item>
-        </Form>
+            <Form.Item name="description" className={styles.modalFormInput}>
+              <input
+                type="text"
+                name="description"
+                placeholder="Description"
+                defaultValue={editedMarkData?.description}
+                onChange={(e) => {
+                  setDataDesc(e.target.value);
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="markValue" className={styles.modalFormInput}>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                name="markValue"
+                placeholder="Mark value"
+                defaultValue={editedMarkData?.markValue}
+                onChange={(e) => {
+                  setMarkDesc(e.target.value);
+                }}
+              />
+            </Form.Item>
+          </Form>
+        )}
         <div className={styles.modalCancel}>
           <button onClick={() => deleteMark()}>Delete</button>
         </div>

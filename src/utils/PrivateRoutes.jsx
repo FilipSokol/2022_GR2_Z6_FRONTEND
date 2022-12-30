@@ -1,8 +1,6 @@
 import { Outlet, Navigate } from "react-router-dom";
-import NaviMobile from "../components/NaviMobile";
 import SideMenu from "../components/SideMenu";
 import authService from "../services/auth.service";
-import { useResponsive } from "./responsive";
 
 const PrivateRoutes = () => {
   const useAuth = () => {
@@ -21,8 +19,7 @@ const PrivateRoutes = () => {
 
   return isAuth ? (
     <>
-      {useResponsive().isMobile && <NaviMobile />}
-      {useResponsive().isDesktop && <SideMenu />}
+      <SideMenu />
       <Outlet />
     </>
   ) : (

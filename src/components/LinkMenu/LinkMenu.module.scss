@@ -33,16 +33,3 @@ a {
     }
   }
 }
-
-@media (max-width: $lg) {
-  li {
-    .text {
-      display: block;
-    }
-  }
-
-  .background {
-    border-right: 20px solid $blue;
-    width: calc(100% - 46px);
-  }
-}

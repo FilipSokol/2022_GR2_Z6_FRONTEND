@@ -10,7 +10,6 @@ import student from "../../assets/student";
 import mediumLogo from "../../assets/mediumLogo";
 import tool from "../../assets/tool";
 import authService from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
 
 export default function SideMenu() {
   const token = authService.getCurrentUser();
@@ -93,23 +92,21 @@ export default function SideMenu() {
 
   return (
     <div>
-      {useResponsive().isDesktop && (
-        <div className={styles.sideMenuContainer}>
-          <div className={styles.content}>
-            <div className={styles.logo}>
-              <Link to="/">
-                {useResponsive().isSmallDesktop ? (
-                  <SvgIcon icon={smallLogo} />
-                ) : (
-                  <SvgIcon icon={mediumLogo} />
-                )}
-              </Link>
-            </div>
-
-            {useAuthMenu()}
+      <div className={styles.sideMenuContainer}>
+        <div className={styles.content}>
+          <div className={styles.logo}>
+            <Link to="/">
+              {useResponsive().isSmallDesktop ? (
+                <SvgIcon icon={smallLogo} />
+              ) : (
+                <SvgIcon icon={mediumLogo} />
+              )}
+            </Link>
           </div>
+
+          {useAuthMenu()}
         </div>
-      )}
+      </div>
     </div>
   );
 }
