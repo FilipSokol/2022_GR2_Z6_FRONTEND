@@ -31,14 +31,7 @@ export default function StudentGrades(userData) {
         <div className={styles.semesterBox}>User grades</div>
 
         <div className={styles.buttonsBox}>
-          <div
-            className={
-              location.pathname === "/oceny" ||
-              location.pathname === "/oceny/semestr"
-                ? styles.buttonActive
-                : styles.buttonNotActive
-            }
-          >
+          <div className={styles.buttonActive}>
             {
               userData.userData[
                 "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"

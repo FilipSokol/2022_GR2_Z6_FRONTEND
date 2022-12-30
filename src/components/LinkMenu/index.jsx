@@ -7,7 +7,7 @@ import SvgIcon from "../SvgIcon";
 import styles from "./LinkMenu.module.scss";
 
 export default function LinkMenu(props) {
-  const { icon, link, linkText, logOut } = props;
+  const { icon, link, secondLink, linkText, logOut } = props;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,7 +39,9 @@ export default function LinkMenu(props) {
     <Link to={link && link}>
       <li
         className={
-          location.pathname.startsWith(link) ? styles.background : null
+          location.pathname.startsWith(link) || location.pathname === secondLink
+            ? styles.background
+            : null
         }
       >
         <SvgIcon icon={icon}></SvgIcon>

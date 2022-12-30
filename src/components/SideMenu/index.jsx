@@ -25,6 +25,7 @@ export default function SideMenu() {
             <LinkMenu
               icon={student}
               link={"/oceny"}
+              secondLink={"/"}
               linkText={useResponsive().isSmallDesktop ? "" : "Grades"}
               mobile={false}
             />
@@ -49,6 +50,7 @@ export default function SideMenu() {
             <LinkMenu
               icon={student}
               link={"/oceny"}
+              secondLink={"/"}
               linkText={useResponsive().isSmallDesktop ? "" : "Grades"}
               mobile={false}
             />
@@ -73,6 +75,7 @@ export default function SideMenu() {
             <LinkMenu
               icon={tool}
               link={"/"}
+              secondLink={"/"}
               linkText={useResponsive().isSmallDesktop ? "" : "Admin panel"}
               mobile={false}
             />

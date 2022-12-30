@@ -24,13 +24,8 @@ export default function Layout() {
       case "Student":
         return (
           <>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<StudentGrades userData={user} />} />
             <Route path="/oceny" element={<StudentGrades userData={user} />} />
-            {/* <Route path="/oceny" element={<StudentGrades />}>
-              <Route index element={<SemesterGrades />} />
-              <Route path="semestr" element={<SemesterGrades />} />
-              <Route path="ogolne" element={<AllSemesterGrades />} />
-            </Route> */}
             <Route path="/plan" element={<TimeTable userData={user} />} />
             <Route path="*" element={<Error />} />
           </>
@@ -38,7 +33,10 @@ export default function Layout() {
       case "Teacher":
         return (
           <>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={<TeacherStudentsGrades userData={user} />}
+            />
             <Route
               path="/oceny"
               element={<TeacherStudentsGrades userData={user} />}
