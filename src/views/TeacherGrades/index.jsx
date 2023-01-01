@@ -341,6 +341,11 @@ export default function TeacherStudentsGrades(userData) {
               type="number"
               min="1"
               max="5"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
               name="markValue"
               placeholder="Mark value"
               defaultValue=""
@@ -389,6 +394,11 @@ export default function TeacherStudentsGrades(userData) {
                 max="5"
                 name="markValue"
                 placeholder="Mark value"
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
                 defaultValue={editedMarkData?.markValue}
                 onChange={(e) => {
                   setMarkDesc(e.target.value);

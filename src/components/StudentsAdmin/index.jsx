@@ -45,6 +45,7 @@ export default function StudentsAdmin() {
         notification.success({
           message: "Added a new student.",
         });
+        setAddStudentModalOpen(false);
         getAllStudents();
       })
       .catch((err) => {
@@ -159,10 +160,24 @@ export default function StudentsAdmin() {
               type="number"
               name="departmentId"
               placeholder="Department Id"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
             />
           </Form.Item>
           <Form.Item name="groupId" className={styles.modalFormInput}>
-            <input type="number" name="groupId" placeholder="Group Id" />
+            <input
+              type="number"
+              name="groupId"
+              placeholder="Group Id"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
           </Form.Item>
           <Form.Item name="firstName" className={styles.modalFormInput}>
             <input type="text" name="firstName" placeholder="FirstName" />

@@ -26,6 +26,7 @@ export default function ButtonsAdmin() {
         notification.success({
           message: "Added a new subject.",
         });
+        form.resetFields();
         setAddSubjectModalOpen(false);
       })
       .catch((err) => {
@@ -112,10 +113,28 @@ export default function ButtonsAdmin() {
             />
           </Form.Item>
           <Form.Item name="scheduleId" className={styles.modalFormInput}>
-            <input type="text" name="scheduleId" placeholder="Schedule Id" />
+            <input
+              type="text"
+              name="scheduleId"
+              placeholder="Schedule Id"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
           </Form.Item>
           <Form.Item name="teacherId" className={styles.modalFormInput}>
-            <input type="text" name="teacherId" placeholder="Teacher Id" />
+            <input
+              type="text"
+              name="teacherId"
+              placeholder="Teacher Id"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
           </Form.Item>
         </Form>
       </Modal>

@@ -30,6 +30,9 @@ export default function GroupsAdmin() {
   const [warningModalOpen, setWarningModalOpen] = useState(false);
   const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false);
 
+  const [dataName, setDataName] = useState(null);
+  const [dataId, setDataId] = useState(null);
+
   const [form] = Form.useForm();
   const [formEdit] = Form.useForm();
 
@@ -65,6 +68,8 @@ export default function GroupsAdmin() {
   }
 
   async function addNewGroup(name) {
+    console.log(departmentId);
+    console.log(name);
     await axios
       .post(`http://localhost:5000/api/departments/${departmentId}/groups`, {
         name,
@@ -83,13 +88,13 @@ export default function GroupsAdmin() {
       });
   }
 
-  async function editGroup(name, departmentId) {
+  async function editGroup() {
     await axios
       .put(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${editedGroupData.groupId}`,
+        `http://localhost:5000/api/departments/${dataId}/groups/${editedGroupData.groupId}`,
         {
-          name: name,
-          departmentId: departmentId,
+          name: dataName,
+          departmentId: dataId,
         }
       )
       .then((response) => {
@@ -220,17 +225,24 @@ export default function GroupsAdmin() {
   }
 
   function handleEditDepartment(values) {
-    if (
-      (values.name === undefined && "") ||
-      (values.departmentId === undefined && "")
-    ) {
+    if (dataName === "" || dataId === "") {
       notification.error({
         message: "Fill all fields.",
       });
     } else {
-      editGroup(values.name, values.departmentId);
+      editGroup();
     }
   }
+
+  useEffect(() => {
+    formEdit.resetFields();
+    form.resetFields();
+  }, [editDepartmentModalOpen]);
+
+  useEffect(() => {
+    setDataName(editedGroupData?.name);
+    setDataId(editedGroupData?.departmentId);
+  }, [editDepartmentModalOpen]);
 
   function handleCancel() {
     setEditedGroupData(null);
@@ -277,7 +289,12 @@ export default function GroupsAdmin() {
               size: "small",
             }}
           >
-            <Column title="Nazwa" dataIndex="name" key="name" width="16.6%" />
+            <Column
+              title="Group name"
+              dataIndex="name"
+              key="name"
+              width="16.6%"
+            />
             <Column
               width="10%"
               render={(data) => (
@@ -466,28 +483,31 @@ export default function GroupsAdmin() {
           onFinish={handleEditDepartment}
           className={styles.modalFormBox}
         >
-          <Form.Item
-            initialValue={editedGroupData?.name}
-            name="name"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="name" className={styles.modalFormInput}>
             <input
               type="text"
               name="name"
               defaultValue={editedGroupData?.name}
+              onChange={(e) => {
+                setDataName(e.target.value);
+              }}
               placeholder="Nazwa"
             />
           </Form.Item>
-          <Form.Item
-            initialValue={editedGroupData?.departmentId}
-            name="departmentId"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="departmentId" className={styles.modalFormInput}>
             <input
               type="text"
               name="departmentId"
               defaultValue={editedGroupData?.departmentId}
+              onChange={(e) => {
+                setDataId(e.target.value);
+              }}
               placeholder="ID Wydział"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
             />
           </Form.Item>
         </Form>
@@ -526,8 +546,6 @@ export default function GroupsAdmin() {
           ) : (
             <div>No Data</div>
           )}
-
-          {console.log(scheduleData)}
         </div>
       </Modal>
     </div>

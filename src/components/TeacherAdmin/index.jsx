@@ -150,6 +150,11 @@ export default function TeacherAdmin() {
               type="number"
               name="departmentId"
               placeholder="Department Id"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
             />
           </Form.Item>
           <Form.Item name="firstName" className={styles.modalFormInput}>

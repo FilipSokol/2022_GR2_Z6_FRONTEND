@@ -4,10 +4,7 @@ import Column from "antd/lib/table/Column";
 import styles from "./DepartsmentsAdmin.module.scss";
 import axios from "axios";
 
-export default function DeparmentsAdmin(props) {
-  const { dataDeparments, setDeparmentsData } = props;
-
-  console.log(dataDeparments);
+export default function DeparmentsAdmin() {
   const [data, setData] = useState();
   const [editedDepartmentId, setEditedDepartmentId] = useState();
   const [editedDepartmentData, setEditedDepartmentData] = useState();
@@ -16,6 +13,11 @@ export default function DeparmentsAdmin(props) {
   const [warningModalOpen, setWarningModalOpen] = useState(false);
   const [addDepartmentModalOpen, setAddDepartmentModalOpen] = useState(false);
   const [editDepartmentModalOpen, setEditDepartmentModalOpen] = useState(false);
+
+  const [dataName, setDataName] = useState(null);
+  const [dataAddress, setDataAddress] = useState(null);
+  const [dataCity, setDataCity] = useState(null);
+  const [dataPostal, setDataPostal] = useState(null);
 
   const [form] = Form.useForm();
   const [formEdit] = Form.useForm();
@@ -75,15 +77,13 @@ export default function DeparmentsAdmin(props) {
       });
   }
 
-  async function editDepartment(departmentId, name, address, city, postalCode) {
-    console.log(departmentId, name, address, city, postalCode);
-
+  async function editDepartment(departmentId) {
     await axios
       .put(`http://localhost:5000/api/departments/${departmentId}`, {
-        name: name,
-        address: address,
-        city: city,
-        postalCode: postalCode,
+        name: dataName,
+        address: dataAddress,
+        city: dataCity,
+        postalCode: dataPostal,
       })
       .then((response) => {
         if (response.status) {
@@ -177,24 +177,19 @@ export default function DeparmentsAdmin(props) {
     }
   }
 
-  function handleEditDepartment(values) {
+  function handleEditDepartment() {
+    console.log(dataCity);
     if (
-      (values.name === undefined && "") ||
-      (values.address === undefined && "") ||
-      (values.city === undefined && "") ||
-      (values.postalCode === undefined && "")
+      dataName === "" ||
+      dataAddress === "" ||
+      dataCity === "" ||
+      dataPostal === ""
     ) {
       notification.error({
         message: "Fill all fields.",
       });
     } else {
-      editDepartment(
-        editedDepartmentData.departmentId,
-        values.name,
-        values.address,
-        values.city,
-        values.postalCode
-      );
+      editDepartment(editedDepartmentData.departmentId);
     }
   }
 
@@ -204,6 +199,18 @@ export default function DeparmentsAdmin(props) {
     setEditDepartmentModalOpen(false);
     setAddDepartmentModalOpen(false);
   }
+
+  useEffect(() => {
+    formEdit.resetFields();
+    form.resetFields();
+  }, [editDepartmentModalOpen]);
+
+  useEffect(() => {
+    setDataName(editedDepartmentData?.name);
+    setDataAddress(editedDepartmentData?.address);
+    setDataCity(editedDepartmentData?.city);
+    setDataPostal(editedDepartmentData?.postalCode);
+  }, [editDepartmentModalOpen]);
 
   return (
     <div className={styles.container}>
@@ -411,51 +418,47 @@ export default function DeparmentsAdmin(props) {
           onFinish={handleEditDepartment}
           className={styles.modalFormBox}
         >
-          <Form.Item
-            initialValue={editedDepartmentData?.name}
-            name="name"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="name" className={styles.modalFormInput}>
             <input
               type="text"
               name="name"
               defaultValue={editedDepartmentData?.name}
+              onChange={(e) => {
+                setDataName(e.target.value);
+              }}
               placeholder="Name"
             />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.address}
-            name="address"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="address" className={styles.modalFormInput}>
             <input
               type="text"
               name="address"
               defaultValue={editedDepartmentData?.address}
+              onChange={(e) => {
+                setDataAddress(e.target.value);
+              }}
               placeholder="Address"
             />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.city}
-            name="city"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="city" className={styles.modalFormInput}>
             <input
               type="text"
               name="city"
               defaultValue={editedDepartmentData?.city}
+              onChange={(e) => {
+                setDataCity(e.target.value);
+              }}
               placeholder="City"
             />
           </Form.Item>
-          <Form.Item
-            initialValue={editedDepartmentData?.postalCode}
-            name="postalCode"
-            className={styles.modalFormInput}
-          >
+          <Form.Item name="postalCode" className={styles.modalFormInput}>
             <input
               type="text"
               name="postalCode"
               defaultValue={editedDepartmentData?.postalCode}
+              onChange={(e) => {
+                setDataPostal(e.target.value);
+              }}
               placeholder="PostalCode"
             />
           </Form.Item>
