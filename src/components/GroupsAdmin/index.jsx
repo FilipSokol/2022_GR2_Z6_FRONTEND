@@ -44,7 +44,7 @@ export default function GroupsAdmin() {
   async function getGroupsData(departmentId) {
     await axios
       .get(
-        `http://localhost:5000/api/departments/${
+        `https://student-service-app.azurewebsites.net/api/departments/${
           departmentId ? departmentId : 1
         }/groups`
       )
@@ -58,7 +58,7 @@ export default function GroupsAdmin() {
 
   async function getDepartmentsData() {
     await axios
-      .get("http://localhost:5000/api/departments")
+      .get("https://student-service-app.azurewebsites.net/api/departments")
       .then((response) => {
         setDepartmentsData(response.data);
       })
@@ -71,9 +71,12 @@ export default function GroupsAdmin() {
     console.log(departmentId);
     console.log(name);
     await axios
-      .post(`http://localhost:5000/api/departments/${departmentId}/groups`, {
-        name,
-      })
+      .post(
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/groups`,
+        {
+          name,
+        }
+      )
       .then(() => {
         getGroupsData(departmentId);
         notification.success({
@@ -91,7 +94,7 @@ export default function GroupsAdmin() {
   async function editGroup() {
     await axios
       .put(
-        `http://localhost:5000/api/departments/${dataId}/groups/${editedGroupData.groupId}`,
+        `https://student-service-app.azurewebsites.net/api/departments/${dataId}/groups/${editedGroupData.groupId}`,
         {
           name: dataName,
           departmentId: dataId,
@@ -124,7 +127,7 @@ export default function GroupsAdmin() {
   async function getDeleteGroup(departmentId, groupId) {
     await axios
       .delete(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}`
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/groups/${groupId}`
       )
       .then((response) => {
         console.log(response);
@@ -149,7 +152,7 @@ export default function GroupsAdmin() {
   async function deleteStudent(dataStudents) {
     await axios
       .delete(
-        `http://localhost:5000/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students/${dataStudents.studentId}`
+        `https://student-service-app.azurewebsites.net/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students/${dataStudents.studentId}`
       )
       .then(() => {
         getDepartmentsGroupData(dataStudents);
@@ -167,7 +170,9 @@ export default function GroupsAdmin() {
   async function getGroupSchedule(groupId) {
     if (groupId) {
       await axios
-        .get(`http://localhost:5000/api/schedules/${groupId}`)
+        .get(
+          `https://student-service-app.azurewebsites.net/api/schedules/${groupId}`
+        )
         .then((response) => {
           let id = 0;
           let newArray = [];
@@ -199,7 +204,7 @@ export default function GroupsAdmin() {
   async function getDepartmentsGroupData(dataStudents) {
     await axios
       .get(
-        `http://localhost:5000/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students`
+        `https://student-service-app.azurewebsites.net/api/departments/${dataStudents.departmentId}/groups/${dataStudents.groupId}/students`
       )
       .then((response) => {
         setGroupData(response.data);

@@ -28,7 +28,7 @@ export default function DeparmentsAdmin() {
 
   async function getDepartmentsData() {
     await axios
-      .get("http://localhost:5000/api/departments")
+      .get("https://student-service-app.azurewebsites.net/api/departments")
       .then((response) => {
         setData(response.data);
       })
@@ -39,7 +39,9 @@ export default function DeparmentsAdmin() {
 
   async function getDepartmentsGroupData(departmentId) {
     await axios
-      .get(`http://localhost:5000/api/departments/${departmentId}/groups`)
+      .get(
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/groups`
+      )
       .then((response) => {
         setGroupData(response.data);
       })
@@ -50,7 +52,7 @@ export default function DeparmentsAdmin() {
 
   async function createDepartment(name, address, city, postalCode) {
     await axios
-      .post("http://localhost:5000/api/departments", {
+      .post("https://student-service-app.azurewebsites.net/api/departments", {
         name: name,
         address: address,
         city: city,
@@ -79,12 +81,15 @@ export default function DeparmentsAdmin() {
 
   async function editDepartment(departmentId) {
     await axios
-      .put(`http://localhost:5000/api/departments/${departmentId}`, {
-        name: dataName,
-        address: dataAddress,
-        city: dataCity,
-        postalCode: dataPostal,
-      })
+      .put(
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}`,
+        {
+          name: dataName,
+          address: dataAddress,
+          city: dataCity,
+          postalCode: dataPostal,
+        }
+      )
       .then((response) => {
         if (response.status) {
           setEditedDepartmentData(null);
@@ -111,7 +116,9 @@ export default function DeparmentsAdmin() {
 
   async function deleteDepartment(departmentId) {
     await axios
-      .delete(`http://localhost:5000/api/departments/${departmentId}`)
+      .delete(
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}`
+      )
       .then((response) => {
         if (response.status) {
           getDepartmentsData();
@@ -136,7 +143,7 @@ export default function DeparmentsAdmin() {
   async function getDeleteGroup(departmentId, groupId) {
     await axios
       .delete(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}`
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/groups/${groupId}`
       )
       .then((response) => {
         if (response.status) {

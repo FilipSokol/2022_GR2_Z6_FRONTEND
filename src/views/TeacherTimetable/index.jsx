@@ -20,7 +20,7 @@ export default function TeacherTimeTable(userData) {
   async function getTeacherGroups() {
     await axios
       .get(
-        `http://localhost:5000/api/teacher/${userData.userData.TeacherId}/groups`
+        `https://student-service-app.azurewebsites.net/api/teacher/${userData.userData.TeacherId}/groups`
       )
       .then((response) => {
         setTeacherGroups(response.data);
@@ -35,7 +35,9 @@ export default function TeacherTimeTable(userData) {
   async function getSchedule() {
     if (groupId) {
       await axios
-        .get(`http://localhost:5000/api/schedules/${groupId}`)
+        .get(
+          `https://student-service-app.azurewebsites.net/api/schedules/${groupId}`
+        )
         .then((response) => {
           let id = 0;
           let newArray = [];

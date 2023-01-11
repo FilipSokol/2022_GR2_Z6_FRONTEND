@@ -17,7 +17,7 @@ export default function TeacherAdmin() {
 
   async function getAllTeacher() {
     await axios
-      .get("http://localhost:5000/api/teacher")
+      .get("https://student-service-app.azurewebsites.net/api/teacher")
       .then((response) => {
         setData(response.data);
       })
@@ -28,11 +28,14 @@ export default function TeacherAdmin() {
 
   async function addNewTeacher(departmentId, firstName, lastName, email) {
     await axios
-      .post(`http://localhost:5000/api/departments/${departmentId}/teachers`, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-      })
+      .post(
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/teachers`,
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        }
+      )
       .then(() => {
         notification.success({
           message: "Added a new teacher.",

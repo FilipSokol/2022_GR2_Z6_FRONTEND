@@ -14,7 +14,7 @@ export default function StudentGrades(userData) {
   const getAllSubjectsWithGrades = () => {
     axios
       .get(
-        `http://localhost:5000/api/subjects/${userData.userData.StudentId}/student`
+        `https://student-service-app.azurewebsites.net/api/subjects/${userData.userData.StudentId}/student`
       )
       .then((res) => {
         setData(res.data);

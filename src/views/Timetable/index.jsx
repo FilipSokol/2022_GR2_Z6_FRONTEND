@@ -17,7 +17,9 @@ export default function TimeTable(userData) {
 
   async function getSchedule() {
     await axios
-      .get(`http://localhost:5000/api/schedules/${userData.userData.GroupId}`)
+      .get(
+        `https://student-service-app.azurewebsites.net/api/schedules/${userData.userData.GroupId}`
+      )
       .then((response) => {
         let id = 0;
         let newArray = [];

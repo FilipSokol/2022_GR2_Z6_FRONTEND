@@ -17,7 +17,7 @@ export default function StudentsAdmin() {
 
   async function getAllStudents() {
     await axios
-      .get("http://localhost:5000/api/students")
+      .get("https://student-service-app.azurewebsites.net/api/students")
       .then((response) => {
         setData(response.data);
       })
@@ -34,7 +34,7 @@ export default function StudentsAdmin() {
   ) {
     await axios
       .post(
-        `http://localhost:5000/api/departments/${departmentId}/groups/${groupId}/students`,
+        `https://student-service-app.azurewebsites.net/api/departments/${departmentId}/groups/${groupId}/students`,
         {
           firstName: firstName,
           lastName: lastName,

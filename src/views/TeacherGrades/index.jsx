@@ -29,7 +29,7 @@ export default function TeacherStudentsGrades(userData) {
   async function getTeacherGroups() {
     await axios
       .get(
-        `http://localhost:5000/api/teacher/${userData.userData.TeacherId}/groups`
+        `https://student-service-app.azurewebsites.net/api/teacher/${userData.userData.TeacherId}/groups`
       )
       .then((response) => {
         setTeacherGroups(response.data);
@@ -44,7 +44,9 @@ export default function TeacherStudentsGrades(userData) {
   async function getGroupStudentsWithGrades() {
     if (groupId) {
       await axios
-        .get(`http://localhost:5000/api/groups/${groupId}/subjects`)
+        .get(
+          `https://student-service-app.azurewebsites.net/api/groups/${groupId}/subjects`
+        )
         .then((response) => {
           setData(response.data);
         })
@@ -58,7 +60,7 @@ export default function TeacherStudentsGrades(userData) {
   async function addNewMark(values) {
     await axios
       .post(
-        `http://localhost:5000/api/students/${studentInfo.studentId}/marks`,
+        `https://student-service-app.azurewebsites.net/api/students/${studentInfo.studentId}/marks`,
         {
           dateOfIssue: new Date(),
           subjectId: studentInfo.subjectId,
@@ -83,7 +85,7 @@ export default function TeacherStudentsGrades(userData) {
   async function udpateMark() {
     await axios
       .put(
-        `http://localhost:5000/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`,
+        `https://student-service-app.azurewebsites.net/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`,
         {
           dateOfIssue: new Date(),
           subjectId: editedMarkData.subjectId,
@@ -108,7 +110,7 @@ export default function TeacherStudentsGrades(userData) {
   async function deleteMark() {
     await axios
       .delete(
-        `http://localhost:5000/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`
+        `https://student-service-app.azurewebsites.net/api/students/${editedMarkData.studentId}/marks/${editedMarkData.markId}`
       )
       .then((response) => {
         notification.success({

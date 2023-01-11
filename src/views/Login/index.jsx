@@ -29,7 +29,7 @@ export default function Login() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/api/account/login", {
+      .post("https://student-service-app.azurewebsites.net/api/account/login", {
         email: email,
         password: password,
       })

@@ -110,17 +110,20 @@ export default function Register() {
     e.preventDefault();
 
     if (valStatus === true) {
-      Axios.post("http://localhost:5000/api/account/register", {
-        email: emailReg,
-        firstName: firstNameReg,
-        lastName: lastNameReg,
-        password: passwordReg,
-        confirmPassword: passwordReg,
-        nationality: "Polska",
-        province: "Slask",
-        dateOfBirth: birthdayReg,
-        roleId: 1,
-      }).then((response) => {
+      Axios.post(
+        "https://student-service-app.azurewebsites.net/api/account/register",
+        {
+          email: emailReg,
+          firstName: firstNameReg,
+          lastName: lastNameReg,
+          password: passwordReg,
+          confirmPassword: passwordReg,
+          nationality: "Polska",
+          province: "Slask",
+          dateOfBirth: birthdayReg,
+          roleId: 1,
+        }
+      ).then((response) => {
         if (response.data === "") {
           navigate("/login");
           notification.success({

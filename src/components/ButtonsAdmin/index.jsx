@@ -12,7 +12,7 @@ export default function ButtonsAdmin() {
 
   async function addNewSubject(data) {
     await axios
-      .post(`http://localhost:5000/api/subjects`, {
+      .post(`https://student-service-app.azurewebsites.net/api/subjects`, {
         name: data.name,
         description: data.description,
         startTime: data.startTime,
