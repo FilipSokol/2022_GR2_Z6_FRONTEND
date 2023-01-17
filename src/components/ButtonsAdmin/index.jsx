@@ -10,6 +10,13 @@ export default function ButtonsAdmin() {
 
   const [form] = Form.useForm();
 
+  const [dataName, setDataName] = useState("");
+  const [dataDesc, setDataDesc] = useState("");
+  const [dataStart, setDataStart] = useState("");
+  const [dataEnd, setDataEnd] = useState("");
+  const [dataSchedule, setDataSchedule] = useState("");
+  const [dataTeacherId, setDataTeacherId] = useState("");
+
   async function addNewSubject(data) {
     await axios
       .post(`https://student-service-app.azurewebsites.net/api/subjects`, {
@@ -50,12 +57,25 @@ export default function ButtonsAdmin() {
         message: "Fill all fields.",
       });
     } else {
+      form.resetFields();
+      setDataName("");
+      setDataDesc("");
+      setDataStart("");
+      setDataEnd("");
+      setDataSchedule("");
+      setDataTeacherId("");
       addNewSubject(values);
     }
   }
 
   function handleCancel() {
     form.resetFields();
+    setDataName("");
+    setDataDesc("");
+    setDataStart("");
+    setDataEnd("");
+    setDataSchedule("");
+    setDataTeacherId("");
     setAddSubjectModalOpen(false);
   }
 
@@ -89,10 +109,26 @@ export default function ButtonsAdmin() {
           className={styles.modalFormBox}
         >
           <Form.Item name="name" className={styles.modalFormInput}>
-            <input type="text" name="name" placeholder="Name" />
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              defaultValue={dataName}
+              onChange={(e) => {
+                setDataName(e.target.value);
+              }}
+            />
           </Form.Item>
           <Form.Item name="description" className={styles.modalFormInput}>
-            <input type="text" name="description" placeholder="Description" />
+            <input
+              type="text"
+              name="description"
+              placeholder="Description"
+              defaultValue={dataDesc}
+              onChange={(e) => {
+                setDataDesc(e.target.value);
+              }}
+            />
           </Form.Item>
           <Form.Item name="startTime" className={styles.modalFormInput}>
             <input
@@ -101,6 +137,10 @@ export default function ButtonsAdmin() {
               onFocus={(e) => (e.target.type = "datetime-local")}
               onBlur={(e) => (e.target.type = "text")}
               placeholder="Start Time"
+              defaultValue={dataStart}
+              onChange={(e) => {
+                setDataStart(e.target.value);
+              }}
             />
           </Form.Item>
           <Form.Item name="endTime" className={styles.modalFormInput}>
@@ -110,6 +150,10 @@ export default function ButtonsAdmin() {
               onFocus={(e) => (e.target.type = "datetime-local")}
               onBlur={(e) => (e.target.type = "text")}
               placeholder="End Time"
+              defaultValue={dataEnd}
+              onChange={(e) => {
+                setDataEnd(e.target.value);
+              }}
             />
           </Form.Item>
           <Form.Item name="scheduleId" className={styles.modalFormInput}>
@@ -122,6 +166,10 @@ export default function ButtonsAdmin() {
                   event.preventDefault();
                 }
               }}
+              defaultValue={dataSchedule}
+              onChange={(e) => {
+                setDataSchedule(e.target.value);
+              }}
             />
           </Form.Item>
           <Form.Item name="teacherId" className={styles.modalFormInput}>
@@ -133,6 +181,10 @@ export default function ButtonsAdmin() {
                 if (!/[0-9]/.test(event.key)) {
                   event.preventDefault();
                 }
+              }}
+              defaultValue={dataTeacherId}
+              onChange={(e) => {
+                setDataTeacherId(e.target.value);
               }}
             />
           </Form.Item>

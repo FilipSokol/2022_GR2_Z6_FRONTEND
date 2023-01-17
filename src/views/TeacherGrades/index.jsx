@@ -127,8 +127,6 @@ export default function TeacherStudentsGrades(userData) {
       });
   }
 
-  //====== modals
-
   function handleNewMark(values) {
     if (values.description.length < 0) {
       notification.error({
@@ -285,7 +283,7 @@ export default function TeacherStudentsGrades(userData) {
                           setNewMarkModalOpen(true);
                           setStudentInfo({
                             studentId: data.studentId,
-                            subjectId: data.marks[0].subjectId,
+                            subjectId: subject.subjectId,
                           });
                         }}
                         className={styles.tableButton}
